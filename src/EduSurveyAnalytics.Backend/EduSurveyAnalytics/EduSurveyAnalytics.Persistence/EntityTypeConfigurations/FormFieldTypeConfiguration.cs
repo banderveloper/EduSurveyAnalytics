@@ -9,6 +9,7 @@ public class FormFieldTypeConfiguration : IEntityTypeConfiguration<FormField>
 {
     public void Configure(EntityTypeBuilder<FormField> builder)
     {
+        // Store enum array as postgres integer[]
         builder
             .Property(ff => ff.Constraints)
             .HasConversion(

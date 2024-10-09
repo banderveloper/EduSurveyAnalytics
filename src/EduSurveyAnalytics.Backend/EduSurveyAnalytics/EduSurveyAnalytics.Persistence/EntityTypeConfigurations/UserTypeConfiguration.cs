@@ -12,6 +12,7 @@ public class UserTypeConfiguration : IEntityTypeConfiguration<User>
         builder
             .HasIndex(u => u.AccessCode).IsUnique();
 
+        // Store enum array as postgres integer[]
         builder
             .Property(u => u.Permissions)
             .HasConversion(

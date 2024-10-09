@@ -1,5 +1,8 @@
 ﻿namespace EduSurveyAnalytics.Application.Configurations;
 
+/// <summary>
+/// Appsettings configuration interface
+/// </summary>
 public class DatabaseConfiguration
 {
     public static readonly string ConfigurationKey = "Database";

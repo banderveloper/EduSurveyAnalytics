@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EduSurveyAnalytics.Application.Interfaces;
 
+/// <summary>
+/// Interface of main ef dbcontext class
+/// </summary>
 public interface IApplicationDbContext
 {
     DbSet<User> Users { get; set; }
