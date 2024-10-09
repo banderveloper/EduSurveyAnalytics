@@ -1,4 +1,6 @@
-﻿namespace EduSurveyAnalytics.Domain.Entities;
+﻿using EduSurveyAnalytics.Domain.Enums;
+
+namespace EduSurveyAnalytics.Domain.Entities;
 
 /// <summary>
 /// User of service, some person from education system (student, teacher, director etc)
@@ -25,4 +27,14 @@ public class User : BaseEntity
     public string? Post { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+
+    /// <summary>
+    /// List of allowed actions
+    /// </summary>
+    public ICollection<UserPermission> Permissions { get; set; } = 
+        new List<UserPermission>();
+
+    // EF
+    public ICollection<Answer> Answers { get; set; }
+    public ICollection<Form> Forms { get; set; }
 }

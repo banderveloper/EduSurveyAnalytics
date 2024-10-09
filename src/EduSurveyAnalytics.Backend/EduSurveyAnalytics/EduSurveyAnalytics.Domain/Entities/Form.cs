@@ -24,4 +24,9 @@ public class Form : BaseEntity
     /// Time of last form update
     /// </summary>
     public DateTime UpdatedAt { get; set; }
+
+    // EF
+    public User Owner { get; set; }
+    public ICollection<Answer> Answers { get; set; }
+    public ICollection<FormField> FormFields { get; set; }
 }

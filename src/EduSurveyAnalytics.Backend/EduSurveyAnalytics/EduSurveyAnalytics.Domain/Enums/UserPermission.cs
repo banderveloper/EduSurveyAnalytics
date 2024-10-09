@@ -3,7 +3,7 @@
 /// <summary>
 /// Allowed actions for user in our service
 /// </summary>
-public enum ActionPermission
+public enum UserPermission
 {
     // do everything (superadmin)
     All,

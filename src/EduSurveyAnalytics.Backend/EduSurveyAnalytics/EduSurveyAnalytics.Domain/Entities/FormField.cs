@@ -1,4 +1,6 @@
-﻿namespace EduSurveyAnalytics.Domain.Entities;
+﻿using EduSurveyAnalytics.Domain.Enums;
+
+namespace EduSurveyAnalytics.Domain.Entities;
 
 /// <summary>
 /// One input inside a form
@@ -19,4 +21,14 @@ public class FormField : BaseEntity
     /// Placing order index
     /// </summary>
     public int Order { get; set; }
+
+    /// <summary>
+    /// List of constraints for frontend
+    /// </summary>
+    public ICollection<FormFieldConstraint> Constraints { get; set; } = 
+        new List<FormFieldConstraint>();
+
+    // EF
+    public Form Form { get; set; }
+    public ICollection<FieldAnswer> FieldAnswers { get; set; }
 }
