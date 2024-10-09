@@ -1,0 +1,38 @@
+version: '3'
+services:
+  
+  postgres:
+    container_name: postgres
+    build:
+      context: Postgres
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_DB_USERNAME=arg_value
+        - POSTGRES_DB_PASSWORD=arg_value
+    hostname: edusurveyanalytics.postgres
+    image: postgres
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  
+  
+  edusurveyanalytics:
+    container_name: edusurveyanalytics
+    build:
+      context: EduSurveyAnalytics
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_DB_USERNAME=arg_value
+        - POSTGRES_DB_PASSWORD=arg_value
+    image: banderveloper/edusurveyanalytics
+    hostname: edusurveyanalytics
+    ports:
+      - 5035:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - postgres
+    restart: on-failure
+
+volumes:
+  db_data:

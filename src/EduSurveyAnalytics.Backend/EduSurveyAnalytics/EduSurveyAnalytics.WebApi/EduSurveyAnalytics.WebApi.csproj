@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EduSurveyAnalytics.Application\EduSurveyAnalytics.Application.csproj" />
+      <ProjectReference Include="..\EduSurveyAnalytics.Domain\EduSurveyAnalytics.Domain.csproj" />
+      <ProjectReference Include="..\EduSurveyAnalytics.Persistence\EduSurveyAnalytics.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>

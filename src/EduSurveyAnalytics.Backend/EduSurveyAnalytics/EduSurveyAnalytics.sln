@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduSurveyAnalytics.Applicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduSurveyAnalytics.Persistence", "EduSurveyAnalytics.Persistence\EduSurveyAnalytics.Persistence.csproj", "{F16C9C40-0D00-4D8A-BE4A-C1FE0DE9BA96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduSurveyAnalytics.WebApi", "EduSurveyAnalytics.WebApi\EduSurveyAnalytics.WebApi.csproj", "{5C449F79-40EF-4D28-BEFD-1DC8906041DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F16C9C40-0D00-4D8A-BE4A-C1FE0DE9BA96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F16C9C40-0D00-4D8A-BE4A-C1FE0DE9BA96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F16C9C40-0D00-4D8A-BE4A-C1FE0DE9BA96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C449F79-40EF-4D28-BEFD-1DC8906041DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C449F79-40EF-4D28-BEFD-1DC8906041DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C449F79-40EF-4D28-BEFD-1DC8906041DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C449F79-40EF-4D28-BEFD-1DC8906041DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 		{131305AE-1C3A-4A99-8112-8230DF6E1BC0} = {E491425B-1E58-4AE2-AE92-C64332879B1C}
 		{3324651B-C123-4652-BFE5-3A1654C0A9D5} = {E491425B-1E58-4AE2-AE92-C64332879B1C}
 		{F16C9C40-0D00-4D8A-BE4A-C1FE0DE9BA96} = {30613D36-2617-4054-8403-ECED0AF81F0F}
+		{5C449F79-40EF-4D28-BEFD-1DC8906041DC} = {A10A5852-5B33-45D4-988E-F2F6ED280C53}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C05CF66F-65BC-4B3B-9844-2B60A871B3AD}
