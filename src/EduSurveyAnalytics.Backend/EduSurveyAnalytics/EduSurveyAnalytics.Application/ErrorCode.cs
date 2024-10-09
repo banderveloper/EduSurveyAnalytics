@@ -10,6 +10,8 @@ public enum ErrorCode
     Unknown,
     InvalidModel,
     
+    InvalidCredentials,
+    
     AccessCodeAlreadyExists,
     UserNotFound
 }

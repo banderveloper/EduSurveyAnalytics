@@ -24,6 +24,7 @@ services:
       args:
         - POSTGRES_DB_USERNAME=arg_value
         - POSTGRES_DB_PASSWORD=arg_value
+        - JWT_SECRET=arg_value
     image: banderveloper/edusurveyanalytics
     hostname: edusurveyanalytics
     ports:

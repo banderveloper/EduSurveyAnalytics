@@ -5,9 +5,11 @@ EXPOSE 443
 
 ARG POSTGRES_DB_USERNAME
 ARG POSTGRES_DB_PASSWORD
+ARG JWT_SECRET
 
 ENV Database__Username=$POSTGRES_DB_USERNAME
 ENV Database__Password=$POSTGRES_DB_PASSWORD
+ENV Jwt__SecretKey=$JWT_SECRET
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src

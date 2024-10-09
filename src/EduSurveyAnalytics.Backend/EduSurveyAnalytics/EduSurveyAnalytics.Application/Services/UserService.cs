@@ -102,4 +102,26 @@ public class UserService(
 
         return Result<bool>.Success(hasPermission);
     }
+
+    public async Task<Result<User>> GetUserByCredentialsAsync(string accessCode, string? password)
+    {
+        // get user by access code
+        var user = await context.Users.FirstOrDefaultAsync(u => u.AccessCode.Equals(accessCode));
+
+        // if not found by access code - error
+        if (user is null)
+            return Result<User>.Error(ErrorCode.InvalidCredentials);
+        
+        // hash input password to find
+        var passwordHash = password is null
+            ? null
+            : hashingProvider.Hash(password);
+        
+        // if password was set but not correct - error
+        if(user.PasswordHash is not null && !user.PasswordHash.Equals(passwordHash))
+            return Result<User>.Error(ErrorCode.InvalidCredentials);
+
+        // If user was found and password or null or correct - success
+        return Result<User>.Success(user);
+    }
 }

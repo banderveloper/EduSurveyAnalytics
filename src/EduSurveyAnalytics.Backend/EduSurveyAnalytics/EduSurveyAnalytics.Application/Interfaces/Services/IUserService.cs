@@ -53,4 +53,12 @@ public interface IUserService
     /// <param name="permission">User permission</param>
     /// <returns>Whether user has a permission</returns>
     Task<Result<bool>> UserHasPermissionAsync(Guid userId, UserPermission permission);
+
+    /// <summary>
+    /// Get user by access code
+    /// </summary>
+    /// <param name="accessCode">Access code to find</param>
+    /// <param name="password">User's password</param>
+    /// <returns>User found by access code and password, or error</returns>
+    Task<Result<User>> GetUserByCredentialsAsync(string accessCode, string? password);
 }

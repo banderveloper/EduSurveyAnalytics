@@ -8,8 +8,16 @@ public static class DependencyInjection
     // Inject custom configuration classes 
     public static void AddCustomConfiguration(this WebApplicationBuilder builder)
     {
-        builder.Services.Configure<DatabaseConfiguration>(builder.Configuration.GetSection(DatabaseConfiguration.ConfigurationKey));
+        // Database configuration
+        builder.Services.Configure<DatabaseConfiguration>(
+            builder.Configuration.GetSection(DatabaseConfiguration.ConfigurationKey));
         builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<DatabaseConfiguration>>().Value);
+
+        // Jwt configuration
+        builder.Services.Configure<JwtConfiguration>(
+            builder.Configuration.GetSection(JwtConfiguration.ConfigurationKey));
+        builder.Services.AddSingleton(resolver =>
+            resolver.GetRequiredService<IOptions<JwtConfiguration>>().Value);
     }
 }
