@@ -45,4 +45,12 @@ public interface IUserService
     /// <param name="password">Non-hashed password</param>
     /// <returns>Empty result with potential errors</returns>
     Task<Result<None>> SetUserPasswordAsync(Guid userId, string password);
+
+    /// <summary>
+    /// Whether user has a permission
+    /// </summary>
+    /// <param name="userId">User id</param>
+    /// <param name="permission">User permission</param>
+    /// <returns>Whether user has a permission</returns>
+    Task<Result<bool>> UserHasPermissionAsync(Guid userId, UserPermission permission);
 }

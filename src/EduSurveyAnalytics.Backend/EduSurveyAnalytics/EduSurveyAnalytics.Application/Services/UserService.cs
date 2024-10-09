@@ -6,9 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EduSurveyAnalytics.Application.Services;
 
-public class UserService(IApplicationDbContext context, IDateTimeProvider dateTimeProvider, IHashingProvider hashingProvider) : IUserService
+public class UserService(
+    IApplicationDbContext context,
+    IDateTimeProvider dateTimeProvider,
+    IHashingProvider hashingProvider) : IUserService
 {
-    public async Task<Result<User>> CreateUserAsync(string accessCode, string lastName, string firstName, string? middleName, DateOnly? birthDate,
+    public async Task<Result<User>> CreateUserAsync(string accessCode, string lastName, string firstName,
+        string? middleName, DateOnly? birthDate,
         string? post)
     {
         // If user with given access code already exists - error
@@ -46,15 +50,16 @@ public class UserService(IApplicationDbContext context, IDateTimeProvider dateTi
         return Result<None>.Success();
     }
 
-    public async Task<Result<None>> UpdateUserAsync(Guid userId, string accessCode, string lastName, string firstName, string? middleName,
+    public async Task<Result<None>> UpdateUserAsync(Guid userId, string accessCode, string lastName, string firstName,
+        string? middleName,
         DateOnly? birthDate, string? post, IEnumerable<UserPermission> permissions)
     {
         // If user with given access code already exists - error
         if (await context.Users.AnyAsync(u => u.AccessCode.Equals(accessCode)))
             return Result<None>.Error(ErrorCode.AccessCodeAlreadyExists);
-        
+
         var user = await context.Users.AsTracking().FirstOrDefaultAsync(u => u.Id.Equals(userId));
-        
+
         if (user is null)
             return Result<None>.Error(ErrorCode.UserNotFound);
 
@@ -75,15 +80,26 @@ public class UserService(IApplicationDbContext context, IDateTimeProvider dateTi
     public async Task<Result<None>> SetUserPasswordAsync(Guid userId, string password)
     {
         var user = await context.Users.AsTracking().FirstOrDefaultAsync(u => u.Id.Equals(userId));
-        
+
         if (user is null)
             return Result<None>.Error(ErrorCode.UserNotFound);
 
         user.PasswordHash = hashingProvider.Hash(password);
-        
+
         context.Users.Update(user);
         await context.SaveChangesAsync();
 
         return Result<None>.Success();
+    }
+
+    public async Task<Result<bool>> UserHasPermissionAsync(Guid userId, UserPermission permission)
+    {
+        // Find user with same id and needed permission (or all permissions)
+        var hasPermission = await context.Users
+            .AnyAsync(u => u.Id.Equals(userId) &&
+                           (u.Permissions.Contains(UserPermission.All) ||
+                            u.Permissions.Contains(permission)));
+
+        return Result<bool>.Success(hasPermission);
     }
 }
