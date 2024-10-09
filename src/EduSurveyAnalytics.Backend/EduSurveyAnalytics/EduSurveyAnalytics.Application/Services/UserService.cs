@@ -46,15 +46,26 @@ public class UserService(IApplicationDbContext context, IDateTimeProvider dateTi
         return Result<None>.Success();
     }
 
-    public async Task<Result<None>> SetUserPermissionsAsync(Guid userId, params UserPermission[] permissions)
+    public async Task<Result<None>> UpdateUserAsync(Guid userId, string accessCode, string lastName, string firstName, string? middleName,
+        DateOnly? birthDate, string? post, IEnumerable<UserPermission> permissions)
     {
+        // If user with given access code already exists - error
+        if (await context.Users.AnyAsync(u => u.AccessCode.Equals(accessCode)))
+            return Result<None>.Error(ErrorCode.AccessCodeAlreadyExists);
+        
         var user = await context.Users.AsTracking().FirstOrDefaultAsync(u => u.Id.Equals(userId));
         
         if (user is null)
             return Result<None>.Error(ErrorCode.UserNotFound);
 
-        user.Permissions = permissions;
-        
+        user.AccessCode = accessCode;
+        user.LastName = lastName;
+        user.FirstName = firstName;
+        user.MiddleName = middleName;
+        user.BirthDate = birthDate;
+        user.Post = post;
+        user.Permissions = (ICollection<UserPermission>)permissions;
+
         context.Users.Update(user);
         await context.SaveChangesAsync();
 
