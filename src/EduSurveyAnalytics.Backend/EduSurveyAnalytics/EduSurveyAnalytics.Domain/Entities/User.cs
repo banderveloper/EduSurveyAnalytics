@@ -28,8 +28,8 @@ public class User : BaseEntity
     /// </summary>
     public string? Post { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 
     /// <summary>
     /// List of allowed actions

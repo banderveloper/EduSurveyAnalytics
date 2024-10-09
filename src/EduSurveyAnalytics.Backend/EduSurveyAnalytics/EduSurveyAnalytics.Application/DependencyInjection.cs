@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EduSurveyAnalytics.Application.Interfaces.Services;
+using EduSurveyAnalytics.Application.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EduSurveyAnalytics.Application;
 
@@ -9,8 +11,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddScoped<IUserService, UserService>();
         
-
+        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IHashingProvider, ShaHashingProvider>();
+        
         return services;
     }
 }

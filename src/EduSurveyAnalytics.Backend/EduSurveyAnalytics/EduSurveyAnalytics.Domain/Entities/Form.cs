@@ -20,12 +20,12 @@ public class Form : BaseEntity
     /// <summary>
     /// Time of form creation
     /// </summary>
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
     /// <summary>
     /// Time of last form update
     /// </summary>
-    public DateTime UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 
     // EF
     [JsonIgnore] public User Owner { get; set; }

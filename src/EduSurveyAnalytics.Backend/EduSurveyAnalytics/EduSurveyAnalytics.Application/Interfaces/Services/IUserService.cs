@@ -1,0 +1,42 @@
+﻿using EduSurveyAnalytics.Domain.Entities;
+using EduSurveyAnalytics.Domain.Enums;
+
+namespace EduSurveyAnalytics.Application.Interfaces.Services;
+
+public interface IUserService
+{
+    /// <summary>
+    /// Create new user
+    /// </summary>
+    /// <param name="accessCode">Login</param>
+    /// <param name="lastName">Person's last name</param>
+    /// <param name="firstName">Person's first name</param>
+    /// <param name="middleName">Person's middle name (if exists)</param>
+    /// <param name="birthDate">Person's birthdate</param>
+    /// <param name="post">Person's job/post</param>
+    /// <returns>Result with created and initialized user, or error</returns>
+    Task<Result<User>> CreateUserAsync(string accessCode, string lastName, string firstName, string? middleName,
+        DateOnly? birthDate, string? post);
+
+    /// <summary>
+    /// Delete existing user by id
+    /// </summary>
+    /// <param name="userId">Result with user's id to delete, or error</param>
+    Task<Result<None>> DeleteUserAsync(Guid userId);
+
+    /// <summary>
+    /// Update user's permission list
+    /// </summary>
+    /// <param name="userId">User's id to change permissions</param>
+    /// <param name="permissions">List of allowed permissions</param>
+    /// <returns>Empty result with potential errors</returns>
+    Task<Result<None>> SetUserPermissionsAsync(Guid userId, params UserPermission[] permissions);
+
+    /// <summary>
+    /// Change user's password
+    /// </summary>
+    /// <param name="userId">User's id to change password</param>
+    /// <param name="password">Non-hashed password</param>
+    /// <returns>Empty result with potential errors</returns>
+    Task<Result<None>> SetUserPasswordAsync(Guid userId, string password);
+}
