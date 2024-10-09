@@ -1,4 +1,6 @@
-﻿namespace EduSurveyAnalytics.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace EduSurveyAnalytics.Domain.Entities;
 
 /// <summary>
 /// User's form answer, has child elements for each input
@@ -9,7 +11,8 @@ public class Answer : BaseEntity
     public Guid FormId { get; set; }
 
     // EF
-    public User User { get; set; }
-    public Form Form { get; set; }
-    public ICollection<FieldAnswer> FieldAnswers { get; set; }
+
+    [JsonIgnore] public User User { get; set; }
+    [JsonIgnore] public Form Form { get; set; }
+    [JsonIgnore] public ICollection<FieldAnswer> FieldAnswers { get; set; }
 }

@@ -1,9 +1,10 @@
-﻿using EduSurveyAnalytics.Domain.Enums;
+﻿using System.Text.Json.Serialization;
+using EduSurveyAnalytics.Domain.Enums;
 
 namespace EduSurveyAnalytics.Domain.Entities;
 
 /// <summary>
-/// User of service, some person from education system (student, teacher, director etc)
+/// User of service, some person from education system (student, teacher, director etc.)
 /// </summary>
 public class User : BaseEntity
 {
@@ -16,25 +17,27 @@ public class User : BaseEntity
     /// Password, nullable because after creating new user during first sign-in he must enter first password
     /// </summary>
     public string? PasswordHash { get; set; }
+
     public string LastName { get; set; }
     public string FirstName { get; set; }
     public string? MiddleName { get; set; }
     public DateOnly? BirthDate { get; set; }
 
     /// <summary>
-    /// Job title, profession (student, teacher, teacher position title etc)
+    /// Job title, profession (student, teacher, teacher position title etc.)
     /// </summary>
     public string? Post { get; set; }
+
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
     /// List of allowed actions
     /// </summary>
-    public ICollection<UserPermission> Permissions { get; set; } = 
+    public ICollection<UserPermission> Permissions { get; set; } =
         new List<UserPermission>();
 
     // EF
-    public ICollection<Answer> Answers { get; set; }
-    public ICollection<Form> Forms { get; set; }
+    [JsonIgnore] public ICollection<Answer> Answers { get; set; }
+    [JsonIgnore] public ICollection<Form> Forms { get; set; }
 }

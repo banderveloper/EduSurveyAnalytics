@@ -1,4 +1,5 @@
-﻿using EduSurveyAnalytics.Domain.Enums;
+﻿using System.Text.Json.Serialization;
+using EduSurveyAnalytics.Domain.Enums;
 
 namespace EduSurveyAnalytics.Domain.Entities;
 
@@ -25,10 +26,10 @@ public class FormField : BaseEntity
     /// <summary>
     /// List of constraints for frontend
     /// </summary>
-    public ICollection<FormFieldConstraint> Constraints { get; set; } = 
+    public ICollection<FormFieldConstraint> Constraints { get; set; } =
         new List<FormFieldConstraint>();
 
     // EF
-    public Form Form { get; set; }
-    public ICollection<FieldAnswer> FieldAnswers { get; set; }
+    [JsonIgnore] public Form Form { get; set; }
+    [JsonIgnore] public ICollection<FieldAnswer> FieldAnswers { get; set; }
 }

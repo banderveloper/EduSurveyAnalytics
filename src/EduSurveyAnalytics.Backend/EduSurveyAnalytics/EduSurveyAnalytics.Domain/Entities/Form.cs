@@ -1,4 +1,6 @@
-﻿namespace EduSurveyAnalytics.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace EduSurveyAnalytics.Domain.Entities;
 
 /// <summary>
 /// Survey form
@@ -26,7 +28,7 @@ public class Form : BaseEntity
     public DateTime UpdatedAt { get; set; }
 
     // EF
-    public User Owner { get; set; }
-    public ICollection<Answer> Answers { get; set; }
-    public ICollection<FormField> FormFields { get; set; }
+    [JsonIgnore] public User Owner { get; set; }
+    [JsonIgnore] public ICollection<Answer> Answers { get; set; }
+    [JsonIgnore] public ICollection<FormField> FormFields { get; set; }
 }

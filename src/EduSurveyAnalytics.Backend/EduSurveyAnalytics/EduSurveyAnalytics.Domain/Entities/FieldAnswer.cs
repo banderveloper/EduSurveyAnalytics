@@ -1,4 +1,6 @@
-﻿namespace EduSurveyAnalytics.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace EduSurveyAnalytics.Domain.Entities;
 
 /// <summary>
 /// Part of answer, one filled field
@@ -14,6 +16,6 @@ public class FieldAnswer : BaseEntity
     public string? Value { get; set; }
 
     // EF
-    public FormField FormField { get; set; }
-    public Answer Answer { get; set; }
+    [JsonIgnore] public FormField FormField { get; set; }
+    [JsonIgnore] public Answer Answer { get; set; }
 }
