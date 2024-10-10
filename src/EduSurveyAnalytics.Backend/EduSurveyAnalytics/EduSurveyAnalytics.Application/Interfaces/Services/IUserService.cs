@@ -36,7 +36,8 @@ public interface IUserService
     /// <param name="post">Person's job/post</param>
     /// <param name="permissions">List of allowed permissions</param>
     /// <returns></returns>
-    Task<Result<None>> UpdateUserAsync(Guid userId, string accessCode, string lastName, string firstName, string? middleName, DateOnly? birthDate, string? post, IEnumerable<UserPermission> permissions);
+    Task<Result<None>> UpdateUserAsync(Guid userId, string accessCode, string lastName, string firstName,
+        string? middleName, DateOnly? birthDate, string? post, IEnumerable<UserPermission> permissions);
 
     /// <summary>
     /// Change user's password

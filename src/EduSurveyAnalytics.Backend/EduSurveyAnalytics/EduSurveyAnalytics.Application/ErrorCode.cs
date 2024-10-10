@@ -8,9 +8,9 @@ namespace EduSurveyAnalytics.Application;
 public enum ErrorCode
 {
     Unknown,
-    InvalidModel,
+    InvalidModel, // 422
     
-    InvalidCredentials,
+    InvalidCredentials, // auth error
     
     AccessCodeAlreadyExists,
     UserNotFound

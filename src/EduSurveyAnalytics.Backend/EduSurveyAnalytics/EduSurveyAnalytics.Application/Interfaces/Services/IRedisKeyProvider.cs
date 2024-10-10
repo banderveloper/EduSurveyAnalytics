@@ -2,5 +2,11 @@
 
 public interface IRedisKeyProvider
 {
+    /// <summary>
+    /// Get refresh session redis key using userId and fingerprint
+    /// </summary>
+    /// <param name="userId">User id, owner of refresh session</param>
+    /// <param name="fingerprint">User's device fingerprint</param>
+    /// <returns>Built redis key of refresh session that stores user id and fingerprint</returns>
     string GetRefreshSessionKey(Guid userId, string fingerprint);
 }

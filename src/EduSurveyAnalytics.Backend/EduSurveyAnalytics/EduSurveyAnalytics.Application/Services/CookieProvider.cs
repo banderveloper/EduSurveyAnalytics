@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace EduSurveyAnalytics.Application.Services;
 
-public class CookieProvider(CookieConfiguration cookieConfiguration, RefreshSessionConfiguration refreshSessionConfiguration) : ICookieProvider
+public class CookieProvider(
+    CookieConfiguration cookieConfiguration,
+    RefreshSessionConfiguration refreshSessionConfiguration) : ICookieProvider
 {
     public void AddFingerprintCookieToResponse(HttpResponse response, string fingerprint)
     {

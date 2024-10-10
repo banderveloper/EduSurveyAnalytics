@@ -39,11 +39,13 @@ public class UserService(
 
     public async Task<Result<None>> DeleteUserAsync(Guid userId)
     {
+        // find user by id, error if not found
         var user = await context.Users.FindAsync(userId);
 
         if (user is null)
             return Result<None>.Error(ErrorCode.UserNotFound);
 
+        // if user exists - delete it
         context.Users.Remove(user);
         await context.SaveChangesAsync();
 
@@ -51,18 +53,19 @@ public class UserService(
     }
 
     public async Task<Result<None>> UpdateUserAsync(Guid userId, string accessCode, string lastName, string firstName,
-        string? middleName,
-        DateOnly? birthDate, string? post, IEnumerable<UserPermission> permissions)
+        string? middleName, DateOnly? birthDate, string? post, IEnumerable<UserPermission> permissions)
     {
         // If user with given access code already exists - error
         if (await context.Users.AnyAsync(u => u.AccessCode.Equals(accessCode)))
             return Result<None>.Error(ErrorCode.AccessCodeAlreadyExists);
 
+        // find user by userId with tracking for updating
         var user = await context.Users.AsTracking().FirstOrDefaultAsync(u => u.Id.Equals(userId));
 
         if (user is null)
             return Result<None>.Error(ErrorCode.UserNotFound);
 
+        // update user's data
         user.AccessCode = accessCode;
         user.LastName = lastName;
         user.FirstName = firstName;
@@ -79,11 +82,13 @@ public class UserService(
 
     public async Task<Result<None>> SetUserPasswordAsync(Guid userId, string password)
     {
+        // find user by userId with tracking for updating
         var user = await context.Users.AsTracking().FirstOrDefaultAsync(u => u.Id.Equals(userId));
 
         if (user is null)
             return Result<None>.Error(ErrorCode.UserNotFound);
 
+        // change user's password with hashing
         user.PasswordHash = hashingProvider.Hash(password);
 
         context.Users.Update(user);
@@ -111,14 +116,14 @@ public class UserService(
         // if not found by access code - error
         if (user is null)
             return Result<User>.Error(ErrorCode.InvalidCredentials);
-        
+
         // hash input password to find
         var passwordHash = password is null
             ? null
             : hashingProvider.Hash(password);
-        
+
         // if password was set but not correct - error
-        if(user.PasswordHash is not null && !user.PasswordHash.Equals(passwordHash))
+        if (user.PasswordHash is not null && !user.PasswordHash.Equals(passwordHash))
             return Result<User>.Error(ErrorCode.InvalidCredentials);
 
         // If user was found and password or null or correct - success

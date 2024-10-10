@@ -1,5 +1,8 @@
 ﻿namespace EduSurveyAnalytics.Domain.Entities.Cached;
 
+/// <summary>
+/// Enduring session of user
+/// </summary>
 public class RefreshSession
 {
     public Guid UserId { get; set; }

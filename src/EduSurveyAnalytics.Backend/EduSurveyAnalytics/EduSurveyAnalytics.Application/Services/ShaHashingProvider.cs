@@ -4,6 +4,9 @@ using EduSurveyAnalytics.Application.Interfaces.Services;
 
 namespace EduSurveyAnalytics.Application.Services;
 
+/// <summary>
+/// SHA256 hasher
+/// </summary>
 public class ShaHashingProvider : IHashingProvider
 {
     public string Hash(string str)

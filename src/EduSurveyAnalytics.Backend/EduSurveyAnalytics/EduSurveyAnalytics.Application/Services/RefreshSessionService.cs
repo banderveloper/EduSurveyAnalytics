@@ -18,6 +18,7 @@ public class RefreshSessionService(
         string deviceFingerprint,
         string refreshToken)
     {
+        // Create redis entity value
         var refreshSession = new RefreshSession
         {
             UserId = userId,
@@ -26,8 +27,10 @@ public class RefreshSessionService(
             RefreshToken = refreshToken
         };
 
+        // Calculate redis key in format [userId]:[fingerprint]
         var redisKey = redisKeyProvider.GetRefreshSessionKey(userId, deviceFingerprint);
 
+        // Create/update redis entity with ttl
         await _redisDatabase.StringSetAsync(redisKey, JsonSerializer.Serialize(refreshSession),
             TimeSpan.FromMinutes(refreshSessionConfiguration.ExpirationMinutes));
 

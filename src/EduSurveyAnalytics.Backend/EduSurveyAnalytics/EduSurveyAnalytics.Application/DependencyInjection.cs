@@ -11,9 +11,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        // Inject services
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRefreshSessionService, RefreshSessionService>();
         
+        // Inject providers
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IHashingProvider, ShaHashingProvider>();
         services.AddSingleton<IJwtProvider, JwtProvider>();

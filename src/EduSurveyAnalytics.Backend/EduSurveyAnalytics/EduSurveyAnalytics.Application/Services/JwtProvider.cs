@@ -13,6 +13,7 @@ public class JwtProvider(JwtConfiguration jwtConfiguration, RefreshSessionConfig
 {
     public string GenerateToken(Guid userId, JwtType jwtType)
     {
+        // generate list of jwt claims, inserting unique key, user id and type of token (access/refresh)
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -20,9 +21,11 @@ public class JwtProvider(JwtConfiguration jwtConfiguration, RefreshSessionConfig
             new(JwtRegisteredClaimNames.Typ, jwtType.ToString().ToLower())
         };
         
+        // get encryption key
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+        // there are two types of token - access and refresh, they have different ttl
         var expirationTime = jwtType switch
         {
             JwtType.Access => DateTime.UtcNow.AddMinutes(jwtConfiguration.AccessExpirationMinutes),
