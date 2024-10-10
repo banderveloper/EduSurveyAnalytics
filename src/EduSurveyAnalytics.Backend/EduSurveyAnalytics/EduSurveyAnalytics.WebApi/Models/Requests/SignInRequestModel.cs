@@ -4,4 +4,5 @@ public class SignInRequestModel
 {
     public string AccessCode { get; set; }
     public string? Password { get; set; }
+    public string Fingerprint { get; set; }
 }

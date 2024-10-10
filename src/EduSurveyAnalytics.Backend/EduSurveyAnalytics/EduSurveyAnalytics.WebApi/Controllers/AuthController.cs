@@ -9,25 +9,15 @@ namespace EduSurveyAnalytics.WebApi.Controllers;
 
 [Route("auth")]
 [AllowAnonymous]
-public class AuthController(IUserService userService, IJwtProvider jwtProvider) : BaseController
+public class AuthController(IUserService userService, IJwtProvider jwtProvider, IRefreshSessionService refreshSessionService) : BaseController
 {
     [HttpGet("sign-in")]
     public async Task<Result<SignInResponseModel>> SignIn([FromBody] SignInRequestModel request)
     {
-        // get user by access code and password
-        var getUserResult = await userService.GetUserByCredentialsAsync(request.AccessCode, request.Password);
+        // ALGORITHM:
+        // Get user by credentials, check existing, generate tokens, create/update session, add refresh and fingerprint to response cookies, access token to payload
+        await refreshSessionService.CreateOrUpdateSessionAsync(Guid.NewGuid(), "dom", "idk", "REFREESH");
 
-        // if not succeed - send auth error to client
-        if (!getUserResult.Succeed)
-            return Result<SignInResponseModel>.Error(getUserResult.ErrorCode);
-
-        // get existing user from result
-        var user = getUserResult.Data;
-
-        return Result<SignInResponseModel>.Success(new SignInResponseModel
-        {
-            AccessToken = jwtProvider.GenerateJwtToken(user.Id),
-            PasswordChangeRequired = user.PasswordHash is null
-        });
+        return Result<SignInResponseModel>.Success(null);
     }
 }

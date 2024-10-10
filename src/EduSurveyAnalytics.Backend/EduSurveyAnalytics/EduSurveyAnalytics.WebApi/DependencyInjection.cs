@@ -5,6 +5,7 @@ using EduSurveyAnalytics.Application.Extensions;
 using EduSurveyAnalytics.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 namespace EduSurveyAnalytics.WebApi;
 
@@ -80,9 +81,10 @@ public static class DependencyInjection
     {
         var redisConfiguration = scope.ServiceProvider.GetRequiredService<RedisConfiguration>();
         
-        builder.Services.AddStackExchangeRedisCache(options =>
+        builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
-            options.Configuration = redisConfiguration.ConnectionString;
+            var configuration = ConfigurationOptions.Parse(redisConfiguration.ConnectionString);
+            return ConnectionMultiplexer.Connect(configuration);
         });
     }
 }
