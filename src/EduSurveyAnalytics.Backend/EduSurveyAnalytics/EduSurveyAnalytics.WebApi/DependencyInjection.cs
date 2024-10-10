@@ -1,4 +1,9 @@
-﻿using EduSurveyAnalytics.Application.Configurations;
+﻿using EduSurveyAnalytics.Application;
+using EduSurveyAnalytics.Application.Configurations;
+using EduSurveyAnalytics.Application.Converters;
+using EduSurveyAnalytics.Application.Extensions;
+using EduSurveyAnalytics.Persistence;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace EduSurveyAnalytics.WebApi;
@@ -19,5 +24,65 @@ public static class DependencyInjection
             builder.Configuration.GetSection(JwtConfiguration.ConfigurationKey));
         builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<JwtConfiguration>>().Value);
+        
+        // Redis configuration
+        builder.Services.Configure<RedisConfiguration>(
+            builder.Configuration.GetSection(RedisConfiguration.ConfigurationKey));
+        builder.Services.AddSingleton(resolver =>
+            resolver.GetRequiredService<IOptions<RedisConfiguration>>().Value);
+    }
+
+    // Inject controllers with configured json and 422 behaviour
+    public static void AddControllersWithConfiguredBehaviour(this WebApplicationBuilder builder)
+    {
+        builder.Services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                // ErrorCode enum int value to snake_case_string in response (ex: not 1, but username_already_exists)
+                options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<ErrorCode>());
+            })
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                // Change default 422 behaviour
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    // Get list of validation errors in format {propName: [error1, error2]}
+                    var errors = context.ModelState
+                        .Where(x => x.Value.Errors.Any())
+                        .ToDictionary(
+                            kvp => kvp.Key.ToLowerFirstLetter(),
+                            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                        );
+
+                    // Generate server response
+                    var result = new UnprocessableEntityObjectResult(new Result<Dictionary<string, string[]>>
+                    {
+                        ErrorCode = ErrorCode.InvalidModel,
+                        Data = errors
+                    });
+                    result.ContentTypes.Add("application/json");
+
+                    return result;
+                };
+            });
+    }
+
+    // Ensure created database
+    public static void InitializeDatabase(this WebApplicationBuilder builder, IServiceScope scope)
+    {
+        var appDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        DatabaseInitializer.Initialize(appDbContext);
+    } 
+    
+    // Inject redis
+    public static void AddRedis(this WebApplicationBuilder builder, IServiceScope scope)
+    {
+        var redisConfiguration = scope.ServiceProvider.GetRequiredService<RedisConfiguration>();
+        
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redisConfiguration.ConnectionString;
+        });
     }
 }
