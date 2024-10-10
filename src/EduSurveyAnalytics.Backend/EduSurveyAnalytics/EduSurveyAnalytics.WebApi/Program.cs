@@ -8,6 +8,8 @@ AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    /////////// injecting configuration-independent services
+    
     // inject custom configuration classes from file DependencyInjection.cs
     builder.AddCustomConfiguration();
 
@@ -17,8 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
     // inject controllers with configured api and json behaviour
     builder.AddControllersWithConfiguredBehaviour();
     
-    // allowed hosts, implicitly set because of docker
-    builder.WebHost.UseUrls("http://*:80", "http://*:5035");
+    
+    /////////// Injecting services dependent from scope-stored configurations
     
     // Get scope for implicit getting instances from ioc container
     var scope = builder.Services.BuildServiceProvider().CreateScope();
