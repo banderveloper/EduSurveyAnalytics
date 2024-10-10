@@ -10,7 +10,7 @@ public class RefreshSessionService(IConnectionMultiplexer multiplexer, IRedisKey
 {
     private readonly IDatabase _redisDatabase = multiplexer.GetDatabase();
 
-    public async Task<Result<None>> CreateOrUpdateSessionAsync(Guid userId, string deviceAddress, string deviceFingerprint,
+    public async Task<Result<None>> CreateOrUpdateSessionAsync(Guid userId, string? deviceAddress, string deviceFingerprint,
         string refreshToken)
     {
         var refreshSession = new RefreshSession

@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddSingleton<IHashingProvider, ShaHashingProvider>();
         services.AddSingleton<IJwtProvider, JwtProvider>();
         services.AddSingleton<IRedisKeyProvider, RedisKeyProvider>();
+        services.AddSingleton<ICookieProvider, CookieProvider>();
         
         return services;
     }

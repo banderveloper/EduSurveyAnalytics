@@ -1,6 +1,8 @@
-﻿namespace EduSurveyAnalytics.Application.Interfaces.Services;
+﻿using EduSurveyAnalytics.Domain.Enums;
+
+namespace EduSurveyAnalytics.Application.Interfaces.Services;
 
 public interface IJwtProvider
 {
-    string GenerateJwtToken(Guid userId);
+    string GenerateToken(Guid userId, JwtType jwtType);
 }

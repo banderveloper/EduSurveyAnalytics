@@ -31,6 +31,18 @@ public static class DependencyInjection
             builder.Configuration.GetSection(RedisConfiguration.ConfigurationKey));
         builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<RedisConfiguration>>().Value);
+        
+        // Refresh session configuration
+        builder.Services.Configure<RefreshSessionConfiguration>(
+            builder.Configuration.GetSection(RefreshSessionConfiguration.ConfigurationKey));
+        builder.Services.AddSingleton(resolver =>
+            resolver.GetRequiredService<IOptions<RefreshSessionConfiguration>>().Value);
+            
+        // Cookie session configuration
+        builder.Services.Configure<CookieConfiguration>(
+            builder.Configuration.GetSection(CookieConfiguration.ConfigurationKey));
+        builder.Services.AddSingleton(resolver =>
+            resolver.GetRequiredService<IOptions<CookieConfiguration>>().Value);
     }
 
     // Inject controllers with configured json and 422 behaviour
@@ -81,7 +93,7 @@ public static class DependencyInjection
     {
         var redisConfiguration = scope.ServiceProvider.GetRequiredService<RedisConfiguration>();
         
-        builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+        builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
         {
             var configuration = ConfigurationOptions.Parse(redisConfiguration.ConnectionString);
             return ConnectionMultiplexer.Connect(configuration);
