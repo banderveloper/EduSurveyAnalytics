@@ -1,16 +1,21 @@
 ﻿using System.Text.Json;
+using EduSurveyAnalytics.Application.Configurations;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Entities.Cached;
 using StackExchange.Redis;
 
 namespace EduSurveyAnalytics.Application.Services;
 
-public class RefreshSessionService(IConnectionMultiplexer multiplexer, IRedisKeyProvider redisKeyProvider)
+public class RefreshSessionService(
+    IConnectionMultiplexer multiplexer,
+    IRedisKeyProvider redisKeyProvider,
+    RefreshSessionConfiguration refreshSessionConfiguration)
     : IRefreshSessionService
 {
     private readonly IDatabase _redisDatabase = multiplexer.GetDatabase();
 
-    public async Task<Result<None>> CreateOrUpdateSessionAsync(Guid userId, string? deviceAddress, string deviceFingerprint,
+    public async Task<Result<None>> CreateOrUpdateSessionAsync(Guid userId, string? deviceAddress,
+        string deviceFingerprint,
         string refreshToken)
     {
         var refreshSession = new RefreshSession
@@ -23,7 +28,8 @@ public class RefreshSessionService(IConnectionMultiplexer multiplexer, IRedisKey
 
         var redisKey = redisKeyProvider.GetRefreshSessionKey(userId, deviceFingerprint);
 
-        await _redisDatabase.StringSetAsync(redisKey, JsonSerializer.Serialize(refreshSession));
+        await _redisDatabase.StringSetAsync(redisKey, JsonSerializer.Serialize(refreshSession),
+            TimeSpan.FromMinutes(refreshSessionConfiguration.ExpirationMinutes));
 
         return Result<None>.Success();
     }

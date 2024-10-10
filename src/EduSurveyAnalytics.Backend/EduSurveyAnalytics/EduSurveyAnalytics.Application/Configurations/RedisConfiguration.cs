@@ -3,7 +3,5 @@
 public class RedisConfiguration
 {
     public static readonly string ConfigurationKey = "Redis";
-    
     public string ConnectionString { get; set; }
-    public int TTLMinutes { get; set; }
 }
