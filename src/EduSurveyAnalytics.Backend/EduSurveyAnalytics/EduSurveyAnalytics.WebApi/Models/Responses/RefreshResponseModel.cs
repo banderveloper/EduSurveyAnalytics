@@ -2,5 +2,5 @@
 
 public class RefreshResponseModel
 {
-    
+    public string AccessToken { get; set; }
 }

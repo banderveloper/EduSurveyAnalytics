@@ -31,4 +31,16 @@ public class CookieProvider(
                 Expires = new DateTimeOffset(DateTime.UtcNow.AddMinutes(refreshSessionConfiguration.ExpirationMinutes))
             });
     }
+
+    public string? GetFingerprintFromRequestCookie(HttpRequest request)
+    {
+        request.Cookies.TryGetValue(cookieConfiguration.FingerprintCookieName, out var fingerprint);
+        return fingerprint;
+    }
+
+    public string? GetRefreshTokenFromRequestCookie(HttpRequest request)
+    {
+        request.Cookies.TryGetValue(cookieConfiguration.RefreshTokenCookieName, out var refresh);
+        return refresh;
+    }
 }

@@ -13,5 +13,10 @@ public enum ErrorCode
     InvalidCredentials, // auth error
     
     AccessCodeAlreadyExists,
-    UserNotFound
+    UserNotFound,
+    
+    InvalidRefreshToken,
+    InvalidFingerprint,
+    
+    SessionNotFound
 }

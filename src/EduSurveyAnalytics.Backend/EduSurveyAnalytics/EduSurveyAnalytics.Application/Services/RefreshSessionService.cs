@@ -36,4 +36,15 @@ public class RefreshSessionService(
 
         return Result<None>.Success();
     }
+
+    public async Task<Result<bool>> SessionExistsAsync(Guid userId, string deviceFingerprint)
+    {
+        // Get redis key [userId]:[fingerprint]
+        var redisKey = redisKeyProvider.GetRefreshSessionKey(userId, deviceFingerprint);
+
+        // get value from redis by key
+        var redisValue = await _redisDatabase.StringGetAsync(redisKey);
+
+        return Result<bool>.Success(redisValue.HasValue);
+    }
 }

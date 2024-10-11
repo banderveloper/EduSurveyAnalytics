@@ -11,4 +11,19 @@ public interface IJwtProvider
     /// <param name="jwtType">Access or refresh</param>
     /// <returns>User's JWT token</returns>
     string GenerateToken(Guid userId, JwtType jwtType);
+
+    /// <summary>
+    /// Check whether token is valid
+    /// </summary>
+    /// <param name="token">JWT token to validate</param>
+    /// <param name="tokenType">Token type (access or refresh)</param>
+    /// <returns>Whether token is valid</returns>
+    bool IsTokenValid(string token, JwtType tokenType);
+
+    /// <summary>
+    /// Get user id from jwt token
+    /// </summary>
+    /// <param name="jwtToken">JWT token to extract user id</param>
+    /// <returns>User id from JWT token</returns>
+    Guid GetUserIdFromToken(string jwtToken);
 }

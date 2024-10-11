@@ -12,4 +12,12 @@ public interface IRefreshSessionService
     /// <returns>Empty result, or error</returns>
     Task<Result<None>> CreateOrUpdateSessionAsync(Guid userId, string? deviceAddress, string deviceFingerprint,
         string refreshToken);
+
+    /// <summary>
+    /// Whether session with given user id and fingerprint exists
+    /// </summary>
+    /// <param name="userId">User id to check session</param>
+    /// <param name="deviceFingerprint">User device to check session</param>
+    /// <returns>Whether session with given user id and fingerprint exists</returns>
+    Task<Result<bool>> SessionExistsAsync(Guid userId, string deviceFingerprint);
 }

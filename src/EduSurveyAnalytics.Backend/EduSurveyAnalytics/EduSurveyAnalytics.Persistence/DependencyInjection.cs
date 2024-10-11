@@ -26,8 +26,8 @@ public static class DependencyInjection
             
             options.UseNpgsql(filledConnectionString);
             
-            // No ef caching, increases EF perfomance
-            // in Update ef quieries required to use .AsTracking() for working
+            // No ef caching, increases EF performance
+            // in Update ef queries required to use .AsTracking() for working
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
         
