@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using EduSurveyAnalytics.Application.Configurations;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Enums;
@@ -19,14 +20,19 @@ public class JwtProvider : IJwtProvider
     {
         _jwtConfiguration = jwtConfiguration;
         _refreshSessionConfiguration = refreshSessionConfiguration;
+
+        Console.WriteLine("JWT CONFIGURATION IN PROVIDER: ");
+        Console.WriteLine(JsonSerializer.Serialize(_jwtConfiguration));
         
         ValidationParameters = new TokenValidationParameters
         {
+            ValidateTokenReplay = true,
             ValidateIssuer = true,
             ValidIssuer = _jwtConfiguration.Issuer,
             ValidateAudience = true,
             ValidAudience = _jwtConfiguration.Audience,
             ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.SecretKey)),
         };
     }

@@ -1,8 +1,11 @@
-﻿using EduSurveyAnalytics.Application;
+﻿using System.Text.Json;
+using EduSurveyAnalytics.Application;
 using EduSurveyAnalytics.Application.Configurations;
 using EduSurveyAnalytics.Application.Converters;
 using EduSurveyAnalytics.Application.Extensions;
+using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
@@ -25,19 +28,19 @@ public static class DependencyInjection
             builder.Configuration.GetSection(JwtConfiguration.ConfigurationKey));
         builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<JwtConfiguration>>().Value);
-        
+
         // Redis configuration
         builder.Services.Configure<RedisConfiguration>(
             builder.Configuration.GetSection(RedisConfiguration.ConfigurationKey));
         builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<RedisConfiguration>>().Value);
-        
+
         // Refresh session configuration
         builder.Services.Configure<RefreshSessionConfiguration>(
             builder.Configuration.GetSection(RefreshSessionConfiguration.ConfigurationKey));
         builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<RefreshSessionConfiguration>>().Value);
-            
+
         // Cookie session configuration
         builder.Services.Configure<CookieConfiguration>(
             builder.Configuration.GetSection(CookieConfiguration.ConfigurationKey));
@@ -86,17 +89,35 @@ public static class DependencyInjection
     {
         var appDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         DatabaseInitializer.Initialize(appDbContext);
-    } 
-    
+    }
+
     // Inject redis
     public static void AddRedis(this WebApplicationBuilder builder, IServiceScope scope)
     {
         var redisConfiguration = scope.ServiceProvider.GetRequiredService<RedisConfiguration>();
-        
+
         builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
         {
             var configuration = ConfigurationOptions.Parse(redisConfiguration.ConnectionString);
             return ConnectionMultiplexer.Connect(configuration);
         });
+    }
+
+    // Inject JWT authentication
+    public static void AddJwtAuthentication(this WebApplicationBuilder builder, IServiceScope scope)
+    {
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                var validationParameters =
+                    scope.ServiceProvider.GetRequiredService<IJwtProvider>().ValidationParameters;
+
+                Console.WriteLine("VALIDATION PARAMETERS:");
+                Console.WriteLine(JsonSerializer.Serialize(validationParameters));
+
+                options.RequireHttpsMetadata = false;
+
+                options.TokenValidationParameters = validationParameters;
+            });
     }
 }

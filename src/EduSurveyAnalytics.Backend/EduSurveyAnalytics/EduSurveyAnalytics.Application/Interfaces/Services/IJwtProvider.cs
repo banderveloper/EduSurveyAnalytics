@@ -1,9 +1,12 @@
 ﻿using EduSurveyAnalytics.Domain.Enums;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EduSurveyAnalytics.Application.Interfaces.Services;
 
 public interface IJwtProvider
 {
+    TokenValidationParameters ValidationParameters { get; }
+    
     /// <summary>
     /// Generate new JWT token
     /// </summary>

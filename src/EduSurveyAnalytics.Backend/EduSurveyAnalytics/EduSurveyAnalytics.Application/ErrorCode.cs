@@ -15,8 +15,9 @@ public enum ErrorCode
     AccessCodeAlreadyExists,
     UserNotFound,
     
+    InvalidAccessToken,
     InvalidRefreshToken,
     InvalidFingerprint,
     
-    SessionNotFound
+    SessionNotFound,
 }

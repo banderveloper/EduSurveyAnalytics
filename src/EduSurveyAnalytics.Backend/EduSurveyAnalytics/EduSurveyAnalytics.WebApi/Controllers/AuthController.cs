@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace EduSurveyAnalytics.WebApi.Controllers;
 
 [Route("auth")]
-[AllowAnonymous]
 public class AuthController(
     IUserService userService,
     IJwtProvider jwtProvider,
@@ -142,17 +141,12 @@ public class AuthController(
         return Result<None>.Success();
     }
 
+    [Authorize]
     [HttpGet("other-sessions")]
     public async Task<Result<IEnumerable<RefreshSession>>> GetOtherRefreshSessions()
     {
-        var userId = Guid.Parse("b52a691d-2eb2-46d9-b234-70993948ee29");
-        
-        Console.WriteLine("START!");
-        Console.WriteLine($"User id from access token: {userId}");
-
-        var sessions = await refreshSessionService.GetUserSessionsAsync(userId);
+        var sessions = await refreshSessionService.GetUserSessionsAsync(UserId);
 
         return sessions;
     }
-    
 }

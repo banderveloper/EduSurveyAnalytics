@@ -28,12 +28,18 @@ var builder = WebApplication.CreateBuilder(args);
     // inject redis
     builder.AddRedis(scope);
     
+    // Inject jwt authentication
+    builder.AddJwtAuthentication(scope);
+    
     // ensure created database
     builder.InitializeDatabase(scope);
 }
 
 var app = builder.Build();
 {
+    app.UseAuthentication();
+    app.UseAuthorization();
+    
     app.MapGet("/time", () => DateTime.UtcNow);
     app.MapControllerRoute(name: "default", pattern: "{controller}/{action}");
 
