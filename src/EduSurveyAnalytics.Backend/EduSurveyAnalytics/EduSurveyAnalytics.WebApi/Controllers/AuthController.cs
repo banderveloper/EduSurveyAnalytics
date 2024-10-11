@@ -145,14 +145,14 @@ public class AuthController(
 
     [Authorize]
     [HttpGet("other-sessions")]
-    public async Task<Result<IEnumerable<RefreshSessionPresentationDTO>>> GetOtherRefreshSessions()
+    public async Task<Result<GetOtherRefreshSessionsResponseModel>> GetOtherRefreshSessions()
     {
         // get user device fingerprint to exclude current session from list
         var fingerprint = cookieProvider.GetFingerprintFromRequestCookie(HttpContext.Request);
 
         // if fingerprint not found - error
         if (fingerprint is null)
-            return Result<IEnumerable<RefreshSessionPresentationDTO>>.Error(ErrorCode.InvalidFingerprint);
+            return Result<GetOtherRefreshSessionsResponseModel>.Error(ErrorCode.InvalidFingerprint);
 
         // get all sessions started by user with current id
         var getSessionsResult = await refreshSessionService.GetUserSessionsAsync(UserId);
@@ -161,6 +161,9 @@ public class AuthController(
         var otherSessions = getSessionsResult.Data
             .Where(dto => !dto.DeviceFingerprint.Equals(fingerprint));
 
-        return Result<IEnumerable<RefreshSessionPresentationDTO>>.Success(otherSessions);
+        return Result<GetOtherRefreshSessionsResponseModel>.Success(new GetOtherRefreshSessionsResponseModel
+        {
+            Sessions = otherSessions
+        }); ;
     }
 }
