@@ -1,4 +1,5 @@
 ﻿using EduSurveyAnalytics.Application;
+using EduSurveyAnalytics.Application.DTO;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Entities.Cached;
 using EduSurveyAnalytics.Domain.Enums;
@@ -6,6 +7,7 @@ using EduSurveyAnalytics.WebApi.Models.Requests;
 using EduSurveyAnalytics.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace EduSurveyAnalytics.WebApi.Controllers;
 
@@ -114,7 +116,7 @@ public class AuthController(
         // ALGORITHM:
         // get refresh token and fingerprint from request cookies, check their existing and token validity...
         // extract user id from refresh token, delete session, delete cookies
-        
+
         // get fingerprint and refreshToken from request cookies
         var refreshToken = cookieProvider.GetRefreshTokenFromRequestCookie(HttpContext.Request);
         var fingerprint = cookieProvider.GetFingerprintFromRequestCookie(HttpContext.Request);
@@ -131,10 +133,10 @@ public class AuthController(
 
         // get user id from token
         var userId = jwtProvider.GetUserIdFromToken(refreshToken);
-        
+
         // delete refresh session from user id and fingerprint 
         await refreshSessionService.DeleteSessionAsync(userId, fingerprint);
-        
+
         // delete fingerprint and refresh token cookies
         cookieProvider.ClearRefreshSessionCookies(HttpContext.Response);
 
@@ -143,10 +145,22 @@ public class AuthController(
 
     [Authorize]
     [HttpGet("other-sessions")]
-    public async Task<Result<IEnumerable<RefreshSession>>> GetOtherRefreshSessions()
+    public async Task<Result<IEnumerable<RefreshSessionPresentationDTO>>> GetOtherRefreshSessions()
     {
-        var sessions = await refreshSessionService.GetUserSessionsAsync(UserId);
+        // get user device fingerprint to exclude current session from list
+        var fingerprint = cookieProvider.GetFingerprintFromRequestCookie(HttpContext.Request);
 
-        return sessions;
+        // if fingerprint not found - error
+        if (fingerprint is null)
+            return Result<IEnumerable<RefreshSessionPresentationDTO>>.Error(ErrorCode.InvalidFingerprint);
+
+        // get all sessions started by user with current id
+        var getSessionsResult = await refreshSessionService.GetUserSessionsAsync(UserId);
+
+        // exclude session with current fingerprint, to hide current session for user
+        var otherSessions = getSessionsResult.Data
+            .Where(dto => !dto.DeviceFingerprint.Equals(fingerprint));
+
+        return Result<IEnumerable<RefreshSessionPresentationDTO>>.Success(otherSessions);
     }
 }

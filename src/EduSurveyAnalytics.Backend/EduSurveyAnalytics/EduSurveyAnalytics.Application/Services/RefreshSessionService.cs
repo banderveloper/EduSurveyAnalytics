@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using EduSurveyAnalytics.Application.Configurations;
+using EduSurveyAnalytics.Application.DTO;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Entities.Cached;
 using StackExchange.Redis;
@@ -59,7 +60,7 @@ public class RefreshSessionService(
         return Result<None>.Success();
     }
 
-    public async Task<Result<IEnumerable<RefreshSession>>> GetUserSessionsAsync(Guid userId)
+    public async Task<Result<IEnumerable<RefreshSessionPresentationDTO>>> GetUserSessionsAsync(Guid userId)
     {
         // get key search parrern by user id "[userId]:*"
         var redisKeySearchPattern = redisKeyProvider.GetSearchPatternByUserId(userId);
@@ -69,7 +70,7 @@ public class RefreshSessionService(
         // get redis instance
         var server = multiplexer.GetServer(multiplexer.GetEndPoints().First());
 
-        var cursor = 0; 
+        var cursor = 0;
         do
         {
             // find all redis keys by given pattern
@@ -89,6 +90,14 @@ public class RefreshSessionService(
             }
         } while (cursor != 0);
 
-        return Result<IEnumerable<RefreshSession>>.Success(refreshSessions);
+        // convert database entities to presentation dtos
+        var refreshSessionsPresentations =
+            refreshSessions.Select(rs => new RefreshSessionPresentationDTO
+            {
+                DeviceAddress = rs.DeviceAddress,
+                DeviceFingerprint = rs.DeviceFingerprint
+            });
+
+        return Result<IEnumerable<RefreshSessionPresentationDTO>>.Success(refreshSessionsPresentations);
     }
 }

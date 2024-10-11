@@ -1,4 +1,5 @@
-﻿using EduSurveyAnalytics.Domain.Entities.Cached;
+﻿using EduSurveyAnalytics.Application.DTO;
+using EduSurveyAnalytics.Domain.Entities.Cached;
 
 namespace EduSurveyAnalytics.Application.Interfaces.Services;
 
@@ -36,5 +37,5 @@ public interface IRefreshSessionService
     /// </summary>
     /// <param name="userId">User id</param>
     /// <returns>List of user sessions</returns>
-    Task<Result<IEnumerable<RefreshSession>>> GetUserSessionsAsync(Guid userId);
+    Task<Result<IEnumerable<RefreshSessionPresentationDTO>>> GetUserSessionsAsync(Guid userId);
 }
