@@ -1,13 +1,10 @@
 ﻿using EduSurveyAnalytics.Application;
-using EduSurveyAnalytics.Application.DTO;
 using EduSurveyAnalytics.Application.Interfaces.Services;
-using EduSurveyAnalytics.Domain.Entities.Cached;
 using EduSurveyAnalytics.Domain.Enums;
 using EduSurveyAnalytics.WebApi.Models.Requests;
 using EduSurveyAnalytics.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace EduSurveyAnalytics.WebApi.Controllers;
 
@@ -164,6 +161,14 @@ public class AuthController(
         return Result<GetOtherRefreshSessionsResponseModel>.Success(new GetOtherRefreshSessionsResponseModel
         {
             Sessions = otherSessions
-        }); ;
+        });
+    }
+
+    [Authorize]
+    [HttpPost("stop-session")]
+    public async Task<Result<None>> StopOtherSession(StopOtherSessionRequestModel request)
+    {
+        await refreshSessionService.DeleteSessionAsync(UserId, request.Fingerprint);
+        return Result<None>.Success();
     }
 }
