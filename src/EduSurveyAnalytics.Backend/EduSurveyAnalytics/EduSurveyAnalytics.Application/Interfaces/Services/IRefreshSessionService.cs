@@ -1,4 +1,6 @@
-﻿namespace EduSurveyAnalytics.Application.Interfaces.Services;
+﻿using EduSurveyAnalytics.Domain.Entities.Cached;
+
+namespace EduSurveyAnalytics.Application.Interfaces.Services;
 
 public interface IRefreshSessionService
 {
@@ -28,4 +30,11 @@ public interface IRefreshSessionService
     /// <param name="deviceFingerprint">Fingerprint</param>
     /// <returns>Empty result</returns>
     Task<Result<None>> DeleteSessionAsync(Guid userId, string deviceFingerprint);
+
+    /// <summary>
+    /// Get all user's sessions
+    /// </summary>
+    /// <param name="userId">User id</param>
+    /// <returns>List of user sessions</returns>
+    Task<Result<IEnumerable<RefreshSession>>> GetUserSessionsAsync(Guid userId);
 }

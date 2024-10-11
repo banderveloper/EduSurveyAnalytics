@@ -6,4 +6,7 @@ public class RedisKeyProvider : IRedisKeyProvider
 {
     public string GetRefreshSessionKey(Guid userId, string fingerprint)
         => $"{userId}:{fingerprint}";
+
+    public string GetSearchPatternByUserId(Guid userId)
+        => $"{userId}:*";
 }

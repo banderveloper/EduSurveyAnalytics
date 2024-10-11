@@ -58,4 +58,30 @@ public class RefreshSessionService(
 
         return Result<None>.Success();
     }
+
+    public async Task<Result<IEnumerable<RefreshSession>>> GetUserSessionsAsync(Guid userId)
+    {
+        var redisKeySearchPattern = redisKeyProvider.GetSearchPatternByUserId(userId);
+        var refreshSessions = new LinkedList<RefreshSession>();
+
+        var server = multiplexer.GetServer(multiplexer.GetEndPoints().First());
+
+        var cursor = 0; 
+        do
+        {
+            var keys = server.Keys(cursor, pattern: redisKeySearchPattern, pageSize: 1000);
+            foreach (var key in keys)
+            {
+                // Get the value of each key
+                var value = await _redisDatabase.StringGetAsync(key);
+
+                var refreshSession = JsonSerializer.Deserialize<RefreshSession>(value.ToString());
+
+                if (refreshSession is not null)
+                    refreshSessions.AddLast(refreshSession);
+            }
+        } while (cursor != 0);
+
+        return Result<IEnumerable<RefreshSession>>.Success(refreshSessions);
+    }
 }

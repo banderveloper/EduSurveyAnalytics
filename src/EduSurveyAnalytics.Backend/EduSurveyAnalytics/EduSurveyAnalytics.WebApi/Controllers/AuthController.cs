@@ -1,5 +1,6 @@
 ﻿using EduSurveyAnalytics.Application;
 using EduSurveyAnalytics.Application.Interfaces.Services;
+using EduSurveyAnalytics.Domain.Entities.Cached;
 using EduSurveyAnalytics.Domain.Enums;
 using EduSurveyAnalytics.WebApi.Models.Requests;
 using EduSurveyAnalytics.WebApi.Models.Responses;
@@ -140,4 +141,18 @@ public class AuthController(
 
         return Result<None>.Success();
     }
+
+    [HttpGet("other-sessions")]
+    public async Task<Result<IEnumerable<RefreshSession>>> GetOtherRefreshSessions()
+    {
+        var userId = Guid.Parse("b52a691d-2eb2-46d9-b234-70993948ee29");
+        
+        Console.WriteLine("START!");
+        Console.WriteLine($"User id from access token: {userId}");
+
+        var sessions = await refreshSessionService.GetUserSessionsAsync(userId);
+
+        return sessions;
+    }
+    
 }
