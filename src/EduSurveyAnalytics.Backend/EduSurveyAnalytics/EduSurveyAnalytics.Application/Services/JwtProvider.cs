@@ -20,9 +20,6 @@ public class JwtProvider : IJwtProvider
     {
         _jwtConfiguration = jwtConfiguration;
         _refreshSessionConfiguration = refreshSessionConfiguration;
-
-        Console.WriteLine("JWT CONFIGURATION IN PROVIDER: ");
-        Console.WriteLine(JsonSerializer.Serialize(_jwtConfiguration));
         
         ValidationParameters = new TokenValidationParameters
         {

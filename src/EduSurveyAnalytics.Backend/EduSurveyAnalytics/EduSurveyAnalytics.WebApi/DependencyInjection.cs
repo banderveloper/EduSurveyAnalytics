@@ -109,15 +109,10 @@ public static class DependencyInjection
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                var validationParameters =
-                    scope.ServiceProvider.GetRequiredService<IJwtProvider>().ValidationParameters;
-
-                Console.WriteLine("VALIDATION PARAMETERS:");
-                Console.WriteLine(JsonSerializer.Serialize(validationParameters));
-
                 options.RequireHttpsMetadata = false;
 
-                options.TokenValidationParameters = validationParameters;
+                options.TokenValidationParameters =
+                    scope.ServiceProvider.GetRequiredService<IJwtProvider>().ValidationParameters;
             });
     }
 }
