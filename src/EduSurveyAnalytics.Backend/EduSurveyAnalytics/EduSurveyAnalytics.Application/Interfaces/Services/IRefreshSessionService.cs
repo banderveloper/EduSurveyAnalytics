@@ -20,4 +20,12 @@ public interface IRefreshSessionService
     /// <param name="deviceFingerprint">User device to check session</param>
     /// <returns>Whether session with given user id and fingerprint exists</returns>
     Task<Result<bool>> SessionExistsAsync(Guid userId, string deviceFingerprint);
+
+    /// <summary>
+    /// Delete session entity from redis
+    /// </summary>
+    /// <param name="userId">User id</param>
+    /// <param name="deviceFingerprint">Fingerprint</param>
+    /// <returns>Empty result</returns>
+    Task<Result<None>> DeleteSessionAsync(Guid userId, string deviceFingerprint);
 }

@@ -18,7 +18,7 @@ public class RefreshSessionService(
         string deviceFingerprint,
         string refreshToken)
     {
-        // Create redis entity value
+        // create redis entity value
         var refreshSession = new RefreshSession
         {
             UserId = userId,
@@ -27,10 +27,10 @@ public class RefreshSessionService(
             RefreshToken = refreshToken
         };
 
-        // Calculate redis key in format [userId]:[fingerprint]
+        // calculate redis key in format [userId]:[fingerprint]
         var redisKey = redisKeyProvider.GetRefreshSessionKey(userId, deviceFingerprint);
 
-        // Create/update redis entity with ttl
+        // create/update redis entity with ttl
         await _redisDatabase.StringSetAsync(redisKey, JsonSerializer.Serialize(refreshSession),
             TimeSpan.FromMinutes(refreshSessionConfiguration.ExpirationMinutes));
 
@@ -39,12 +39,23 @@ public class RefreshSessionService(
 
     public async Task<Result<bool>> SessionExistsAsync(Guid userId, string deviceFingerprint)
     {
-        // Get redis key [userId]:[fingerprint]
+        // get redis key [userId]:[fingerprint]
         var redisKey = redisKeyProvider.GetRefreshSessionKey(userId, deviceFingerprint);
 
         // get value from redis by key
         var redisValue = await _redisDatabase.StringGetAsync(redisKey);
 
         return Result<bool>.Success(redisValue.HasValue);
+    }
+
+    public async Task<Result<None>> DeleteSessionAsync(Guid userId, string deviceFingerprint)
+    {
+        // get redis key [userId]:[fingerprint]
+        var redisKey = redisKeyProvider.GetRefreshSessionKey(userId, deviceFingerprint);
+
+        // drop entity by key
+        await _redisDatabase.KeyDeleteAsync(redisKey);
+
+        return Result<None>.Success();
     }
 }

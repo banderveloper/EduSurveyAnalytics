@@ -63,7 +63,7 @@ public class AuthController(
         // get refresh token and fingerprint from request cookies, check existing and validity, extract user id from refresh token...
         // ...check session existing, generate tokens, start session, add auth tokens to response cookies 
 
-        // get findeprint and refreshToken from request cookies
+        // get fingerprint and refreshToken from request cookies
         var fingerprint = cookieProvider.GetFingerprintFromRequestCookie(HttpContext.Request);
         var refreshToken = cookieProvider.GetRefreshTokenFromRequestCookie(HttpContext.Request);
 
@@ -106,5 +106,38 @@ public class AuthController(
         {
             AccessToken = accessToken
         });
+    }
+
+    [HttpPost("sign-out")]
+    public async Task<Result<None>> SignOut()
+    {
+        // ALGORITHM:
+        // get refresh token and fingerprint from request cookies, check their existing and token validity...
+        // extract user id from refresh token, delete session, delete cookies
+        
+        // get fingerprint and refreshToken from request cookies
+        var refreshToken = cookieProvider.GetRefreshTokenFromRequestCookie(HttpContext.Request);
+        var fingerprint = cookieProvider.GetFingerprintFromRequestCookie(HttpContext.Request);
+
+        // check whether they exists
+        if (refreshToken is null)
+            return Result<None>.Error(ErrorCode.InvalidRefreshToken);
+        if (fingerprint is null)
+            return Result<None>.Error(ErrorCode.InvalidFingerprint);
+
+        // if token is not valid - error
+        if (!jwtProvider.IsTokenValid(refreshToken, JwtType.Refresh))
+            return Result<None>.Error(ErrorCode.InvalidRefreshToken);
+
+        // get user id from token
+        var userId = jwtProvider.GetUserIdFromToken(refreshToken);
+        
+        // delete refresh session from user id and fingerprint 
+        await refreshSessionService.DeleteSessionAsync(userId, fingerprint);
+        
+        // delete fingerprint and refresh token cookies
+        cookieProvider.ClearRefreshSessionCookies(HttpContext.Response);
+
+        return Result<None>.Success();
     }
 }

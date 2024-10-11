@@ -34,4 +34,10 @@ public interface ICookieProvider
     /// <param name="request">Instance of request to get cookies</param>
     /// <returns>Refresh token from cookie, or null</returns>
     string? GetRefreshTokenFromRequestCookie(HttpRequest request);
+
+    /// <summary>
+    /// Delete refresh token and fingerprint cookies from response
+    /// </summary>
+    /// <param name="response">Response instance</param>
+    void ClearRefreshSessionCookies(HttpResponse response);
 }

@@ -43,4 +43,10 @@ public class CookieProvider(
         request.Cookies.TryGetValue(cookieConfiguration.RefreshTokenCookieName, out var refresh);
         return refresh;
     }
+
+    public void ClearRefreshSessionCookies(HttpResponse response)
+    {
+        response.Cookies.Delete(cookieConfiguration.FingerprintCookieName);
+        response.Cookies.Delete(cookieConfiguration.RefreshTokenCookieName);
+    }
 }
