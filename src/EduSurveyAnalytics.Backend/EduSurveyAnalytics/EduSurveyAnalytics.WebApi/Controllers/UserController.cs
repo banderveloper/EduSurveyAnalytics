@@ -35,4 +35,25 @@ public class UserController(IUserService userService) : BaseController
         var result = await userService.SetUserPasswordAsync(UserId, request.Password);
         return result;
     }
+
+    [Authorize]
+    [HttpPost("update")]
+    public async Task<Result<None>> UpdateUser([FromBody] UpdateUserRequestModel request)
+    {
+        // whether user try to update himself (user id from token equals user id from request)
+        var isSelfUpdate = UserId.Equals(request.UserId);
+
+        // if not self-update - check user editing permission
+        if (!isSelfUpdate)
+        {
+            var hasPermission = (await userService.UserHasPermissionAsync(UserId, UserPermission.EditUsers)).Data;
+            if (!hasPermission)
+                return Result<None>.Error(ErrorCode.NotPermitted);
+        }
+
+        await userService.UpdateUserAsync(request.UserId, request.AccessCode, request.LastName, request.FirstName,
+            request.MiddleName, request.BirthDate, request.Post, request.Permissions);
+
+        return Result<None>.Success();
+    }
 }

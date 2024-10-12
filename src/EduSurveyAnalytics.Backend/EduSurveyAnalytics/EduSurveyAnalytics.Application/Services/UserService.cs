@@ -73,6 +73,7 @@ public class UserService(
         user.BirthDate = birthDate;
         user.Post = post;
         user.Permissions = (ICollection<UserPermission>)permissions;
+        user.UpdatedAt = dateTimeProvider.Now;
 
         context.Users.Update(user);
         await context.SaveChangesAsync();
@@ -90,6 +91,7 @@ public class UserService(
 
         // change user's password with hashing
         user.PasswordHash = hashingProvider.Hash(password);
+        user.UpdatedAt = dateTimeProvider.Now;
 
         context.Users.Update(user);
         await context.SaveChangesAsync();
