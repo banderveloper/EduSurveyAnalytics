@@ -1,4 +1,5 @@
-﻿using EduSurveyAnalytics.Application.Interfaces;
+﻿using EduSurveyAnalytics.Application.DTO;
+using EduSurveyAnalytics.Application.Interfaces;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Entities;
 using EduSurveyAnalytics.Domain.Enums;
@@ -128,5 +129,22 @@ public class UserService(
 
         // If user was found and password or null or correct - success
         return Result<User>.Success(user);
+    }
+
+    public async Task<Result<UserPresentationDTO?>> GetUserPresentationAsync(Guid userId)
+    {
+        var user = await context.Users.FindAsync(userId);
+
+        if (user is null)
+            return Result<UserPresentationDTO?>.Success(null);
+
+        return Result<UserPresentationDTO?>.Success(new UserPresentationDTO
+        {
+            Post = user.Post,
+            FirstName = user.FirstName,
+            BirthDate = user.BirthDate,
+            MiddleName = user.MiddleName,
+            LastName = user.LastName
+        });
     }
 }

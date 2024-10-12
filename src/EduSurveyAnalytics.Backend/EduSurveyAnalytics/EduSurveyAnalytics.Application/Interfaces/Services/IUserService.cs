@@ -1,4 +1,5 @@
-﻿using EduSurveyAnalytics.Domain.Entities;
+﻿using EduSurveyAnalytics.Application.DTO;
+using EduSurveyAnalytics.Domain.Entities;
 using EduSurveyAnalytics.Domain.Enums;
 
 namespace EduSurveyAnalytics.Application.Interfaces.Services;
@@ -62,4 +63,11 @@ public interface IUserService
     /// <param name="password">User's password</param>
     /// <returns>User found by access code and password, or error</returns>
     Task<Result<User>> GetUserByCredentialsAsync(string accessCode, string? password);
+
+    /// <summary>
+    /// Get user presentation data
+    /// </summary>
+    /// <param name="userId">User id to get</param>
+    /// <returns>User's presentation data, or null if user not found</returns>
+    Task<Result<UserPresentationDTO?>> GetUserPresentationAsync(Guid userId);
 }

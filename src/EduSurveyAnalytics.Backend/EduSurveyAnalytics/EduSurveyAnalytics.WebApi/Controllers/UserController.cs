@@ -2,6 +2,7 @@
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Enums;
 using EduSurveyAnalytics.WebApi.Models.Requests;
+using EduSurveyAnalytics.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -72,4 +73,17 @@ public class UserController(IUserService userService, IRefreshSessionService ref
 
         return Result<None>.Success();
     }
+
+    [AllowAnonymous]
+    [HttpGet("presentation/{userId:guid}")]
+    public async Task<Result<GetUserPresentationResponseModel>> GetUserPresentation(Guid userId)
+    {
+        var presentationResult = await userService.GetUserPresentationAsync(userId);
+
+        return Result<GetUserPresentationResponseModel>.Success(new GetUserPresentationResponseModel
+        {
+            User = presentationResult.Data
+        });
+    }
+    
 }
