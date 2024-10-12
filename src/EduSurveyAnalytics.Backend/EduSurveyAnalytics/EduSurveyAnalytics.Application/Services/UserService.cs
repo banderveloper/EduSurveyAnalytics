@@ -99,13 +99,11 @@ public class UserService(
 
     public async Task<Result<bool>> UserHasPermissionAsync(Guid userId, UserPermission permission)
     {
-        // Find user with same id and needed permission (or all permissions)
-        var hasPermission = await context.Users
-            .AnyAsync(u => u.Id.Equals(userId) &&
-                           (u.Permissions.Contains(UserPermission.All) ||
-                            u.Permissions.Contains(permission)));
+        var user = await context.Users.FindAsync(userId);
 
-        return Result<bool>.Success(hasPermission);
+        return Result<bool>.Success(user is not null &&
+                                    (user.Permissions.Contains(UserPermission.All) ||
+                                     user.Permissions.Contains(permission)));
     }
 
     public async Task<Result<User>> GetUserByCredentialsAsync(string accessCode, string? password)

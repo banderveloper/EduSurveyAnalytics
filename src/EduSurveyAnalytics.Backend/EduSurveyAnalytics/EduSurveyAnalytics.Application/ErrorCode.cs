@@ -20,4 +20,6 @@ public enum ErrorCode
     InvalidFingerprint,
     
     SessionNotFound,
+    
+    NotPermitted // no permission for making this action
 }
