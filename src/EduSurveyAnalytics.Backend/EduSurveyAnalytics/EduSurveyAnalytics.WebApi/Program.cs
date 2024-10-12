@@ -1,6 +1,7 @@
 using EduSurveyAnalytics.Application;
 using EduSurveyAnalytics.Persistence;
 using EduSurveyAnalytics.WebApi;
+using Serilog;
 
 // pgsql datetime fix
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -9,6 +10,8 @@ AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 var builder = WebApplication.CreateBuilder(args);
 {
     /////////// injecting configuration-independent services
+    
+    builder.AddLogger();
     
     // inject custom configuration classes from file DependencyInjection.cs
     builder.AddCustomConfiguration();
@@ -40,8 +43,13 @@ var app = builder.Build();
     app.UseAuthentication();
     app.UseAuthorization();
     
+    //Add support to logging request with SERILOG
+    app.UseSerilogRequestLogging();
+    
     app.MapGet("/time", () => DateTime.UtcNow);
     app.MapControllerRoute(name: "default", pattern: "{controller}/{action}");
 
+    Log.Information($"Server started on {app.Environment.EnvironmentName} environment");
+    
     app.Run();
 }

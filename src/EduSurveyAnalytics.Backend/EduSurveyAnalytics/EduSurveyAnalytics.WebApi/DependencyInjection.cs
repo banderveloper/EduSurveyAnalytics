@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using EduSurveyAnalytics.Application;
+﻿using EduSurveyAnalytics.Application;
 using EduSurveyAnalytics.Application.Configurations;
 using EduSurveyAnalytics.Application.Converters;
 using EduSurveyAnalytics.Application.Extensions;
@@ -8,6 +7,8 @@ using EduSurveyAnalytics.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Serilog;
+using Serilog.Events;
 using StackExchange.Redis;
 
 namespace EduSurveyAnalytics.WebApi;
@@ -89,6 +90,7 @@ public static class DependencyInjection
     {
         var appDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         DatabaseInitializer.Initialize(appDbContext);
+        Log.Information("Database successfully checked and initialized");
     }
 
     // Inject redis
@@ -114,5 +116,11 @@ public static class DependencyInjection
                 options.TokenValidationParameters =
                     scope.ServiceProvider.GetRequiredService<IJwtProvider>().ValidationParameters;
             });
+    }
+
+    public static void AddLogger(this WebApplicationBuilder builder)
+    {
+        builder.Host.UseSerilog((context, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration));
     }
 }
