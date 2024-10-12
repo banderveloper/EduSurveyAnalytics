@@ -1,19 +1,22 @@
-﻿using EduSurveyAnalytics.Application;
+﻿using System.Reflection;
+using EduSurveyAnalytics.Application;
 using EduSurveyAnalytics.Application.Configurations;
 using EduSurveyAnalytics.Application.Converters;
 using EduSurveyAnalytics.Application.Extensions;
 using EduSurveyAnalytics.Application.Interfaces.Services;
+using EduSurveyAnalytics.Domain.Enums;
 using EduSurveyAnalytics.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using StackExchange.Redis;
 
 namespace EduSurveyAnalytics.WebApi;
 
-public static class DependencyInjection
+public static class WebApplicationBuilderExtensions
 {
     // Inject custom configuration classes 
     public static void AddCustomConfiguration(this WebApplicationBuilder builder)
@@ -58,6 +61,7 @@ public static class DependencyInjection
             {
                 // ErrorCode enum int value to snake_case_string in response (ex: not 1, but username_already_exists)
                 options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<ErrorCode>());
+                options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<UserPermission>());
             })
             .ConfigureApiBehaviorOptions(options =>
             {
@@ -122,5 +126,44 @@ public static class DependencyInjection
     {
         builder.Host.UseSerilog((context, configuration) =>
             configuration.ReadFrom.Configuration(context.Configuration));
+    }
+
+    public static void AddSwagger(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddSwaggerGen(config =>
+        {
+            // xml comments
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            config.IncludeXmlComments(xmlPath);
+
+            // Input for JWT access token at swagger
+            config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description =
+                    "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+            });
+
+            // Inserting written jwt-token to headers
+            config.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
     }
 }

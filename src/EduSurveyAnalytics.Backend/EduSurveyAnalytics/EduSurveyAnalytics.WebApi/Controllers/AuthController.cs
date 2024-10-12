@@ -5,17 +5,31 @@ using EduSurveyAnalytics.WebApi.Models.Requests;
 using EduSurveyAnalytics.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace EduSurveyAnalytics.WebApi.Controllers;
 
+/// <summary>
+/// Authentication controller
+/// </summary>
 [Route("auth")]
+[Produces("application/json")]
 public class AuthController(
     IUserService userService,
     IJwtProvider jwtProvider,
     IRefreshSessionService refreshSessionService,
     ICookieProvider cookieProvider) : BaseController
 {
+    /// <summary>
+    /// Start session and get authentication tokens
+    /// </summary>
+    /// <param name="request">Request with access code, password and fingerprint</param>
+    /// <returns>Access code and password change requirement, fingerprint and refresh token in cookies</returns>
+    /// <response code="200">Success / invalid_credentials</response>
+    /// <response code="422">Request is not valid</response>
     [HttpPost("sign-in")]
+    [ProducesResponseType(typeof(Result<SignInResponseModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<Dictionary<string, string[]>>), StatusCodes.Status422UnprocessableEntity)]
     public async Task<Result<SignInResponseModel>> SignIn([FromBody] SignInRequestModel request)
     {
         // ALGORITHM:
@@ -55,7 +69,13 @@ public class AuthController(
         });
     }
 
+    /// <summary>
+    /// Refresh existing session by passing refresh and fingerprint in cookies and get new tokens. Requires active refresh session cookies.
+    /// </summary>
+    /// <returns>New access code in body, new refresh in cookies</returns>
+    /// <response code="200">Success / invalid_refresh_token / invalid_fingerprint / session_not_found</response>
     [HttpPost("refresh")]
+    [ProducesResponseType(typeof(Result<RefreshResponseModel>), StatusCodes.Status200OK)]
     public async Task<Result<RefreshResponseModel>> Refresh()
     {
         // ALGORITHM:
@@ -107,7 +127,13 @@ public class AuthController(
         });
     }
 
+    /// <summary>
+    /// Drop existing session and clear all cookies. Requires active refresh session cookies.
+    /// </summary>
+    /// <returns>Empty result</returns>
+    /// <response code="200">Success / invalid_refresh_token / invalid_fingerprint</response>
     [HttpPost("sign-out")]
+    [ProducesResponseType(typeof(Result<None>), StatusCodes.Status200OK)]
     public async Task<Result<None>> SignOut()
     {
         // ALGORITHM:
@@ -140,8 +166,16 @@ public class AuthController(
         return Result<None>.Success();
     }
 
+    /// <summary>
+    /// Get other user's sessions, excluding current. Requires JWT authorization for owner of account.
+    /// </summary>
+    /// <returns>List of other user's sessions</returns>
+    /// <response code="200">Success / invalid_fingerprint</response>
+    /// <response code="401">Unauthorized</response>
     [Authorize]
     [HttpGet("other-sessions")]
+    [ProducesResponseType(typeof(Result<GetOtherRefreshSessionsResponseModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<None>), StatusCodes.Status401Unauthorized)]
     public async Task<Result<GetOtherRefreshSessionsResponseModel>> GetOtherRefreshSessions()
     {
         // get user device fingerprint to exclude current session from list
@@ -164,8 +198,19 @@ public class AuthController(
         });
     }
 
+    /// <summary>
+    /// Stop other session of user. Requires JWT authorization for owner of account.
+    /// </summary>
+    /// <param name="request">Device fingerprint to kill session</param>
+    /// <returns>Empty result</returns>
+    /// <response code="200">Success</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="422">Request is not valid</response>
     [Authorize]
     [HttpPost("stop-session")]
+    [ProducesResponseType(typeof(Result<None>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<None>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Result<Dictionary<string, string[]>>), StatusCodes.Status422UnprocessableEntity)]
     public async Task<Result<None>> StopOtherSession(StopOtherSessionRequestModel request)
     {
         await refreshSessionService.DeleteSessionAsync(UserId, request.Fingerprint);

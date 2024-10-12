@@ -21,7 +21,9 @@ var builder = WebApplication.CreateBuilder(args);
 
     // inject controllers with configured api and json behaviour
     builder.AddControllersWithConfiguredBehaviour();
-    
+
+    // inject swagger gen
+    builder.AddSwagger();
     
     /////////// Injecting services dependent from scope-stored configurations
     
@@ -43,8 +45,18 @@ var app = builder.Build();
     app.UseAuthentication();
     app.UseAuthorization();
     
-    //Add support to logging request with SERILOG
+    // add support to logging request with SERILOG
     app.UseSerilogRequestLogging();
+    
+    // add swagger
+    app.UseSwagger();
+    app.UseSwaggerUI(config =>
+    {
+        // get to swagger UI using root uri
+        config.RoutePrefix = string.Empty;
+
+        config.SwaggerEndpoint("swagger/v1/swagger.json", "EduSurveyAnalytics");
+    });
     
     app.MapGet("/time", () => DateTime.UtcNow);
     app.MapControllerRoute(name: "default", pattern: "{controller}/{action}");
