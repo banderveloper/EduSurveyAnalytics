@@ -27,4 +27,12 @@ public class UserController(IUserService userService) : BaseController
             ? Result<None>.Success() 
             : Result<None>.Error(createUserResult.ErrorCode);
     }
+
+    [Authorize]
+    [HttpPost("set-password")]
+    public async Task<Result<None>> SetUserPassword([FromBody] SetUserPasswordRequestModel request)
+    {
+        var result = await userService.SetUserPasswordAsync(UserId, request.Password);
+        return result;
+    }
 }
