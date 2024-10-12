@@ -60,9 +60,26 @@ public class RefreshSessionService(
         return Result<None>.Success();
     }
 
+    public async Task<Result<None>> DeleteUserSessionsAsync(Guid userId)
+    {
+        // get key search pattern by user id "[userId]:*"
+        var redisKeySearchPattern = redisKeyProvider.GetSearchPatternByUserId(userId);
+        
+        // get redis instance
+        var server = multiplexer.GetServer(multiplexer.GetEndPoints().First());
+
+        // get all keys by pattern
+        var keys = server.Keys(pattern: redisKeySearchPattern).ToArray();
+
+        foreach (var key in keys)
+            await _redisDatabase.KeyDeleteAsync(key);
+
+        return Result<None>.Success();
+    }
+
     public async Task<Result<IEnumerable<RefreshSessionPresentationDTO>>> GetUserSessionsAsync(Guid userId)
     {
-        // get key search parrern by user id "[userId]:*"
+        // get key search pattern by user id "[userId]:*"
         var redisKeySearchPattern = redisKeyProvider.GetSearchPatternByUserId(userId);
         // return result
         var refreshSessions = new LinkedList<RefreshSession>();
@@ -74,7 +91,7 @@ public class RefreshSessionService(
         do
         {
             // find all redis keys by given pattern
-            var keys = server.Keys(cursor, pattern: redisKeySearchPattern, pageSize: 1000);
+            var keys = server.Keys(cursor, pattern: redisKeySearchPattern);
 
             foreach (var key in keys)
             {

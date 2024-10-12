@@ -33,6 +33,13 @@ public interface IRefreshSessionService
     Task<Result<None>> DeleteSessionAsync(Guid userId, string deviceFingerprint);
 
     /// <summary>
+    /// Delete user's all sessions
+    /// </summary>
+    /// <param name="userId">User id to delete sessions</param>
+    /// <returns>Empty result</returns>
+    Task<Result<None>> DeleteUserSessionsAsync(Guid userId);
+
+    /// <summary>
     /// Get all user's sessions
     /// </summary>
     /// <param name="userId">User id</param>

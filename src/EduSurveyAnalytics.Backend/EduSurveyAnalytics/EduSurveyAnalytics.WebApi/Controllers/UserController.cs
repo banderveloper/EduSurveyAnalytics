@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EduSurveyAnalytics.WebApi.Controllers;
 
 [Route("user")]
-public class UserController(IUserService userService) : BaseController
+public class UserController(IUserService userService, IRefreshSessionService refreshSessionService) : BaseController
 {
     [Authorize]
     [HttpPost("create")]
@@ -53,6 +53,22 @@ public class UserController(IUserService userService) : BaseController
 
         await userService.UpdateUserAsync(request.UserId, request.AccessCode, request.LastName, request.FirstName,
             request.MiddleName, request.BirthDate, request.Post, request.Permissions);
+
+        return Result<None>.Success();
+    }
+
+    [Authorize]
+    [HttpPost("delete")]
+    public async Task<Result<None>> DeleteUser([FromBody] DeleteUserRequestModel requestModel)
+    {
+        // Check for permission for creating users
+        var hasPermission = (await userService.UserHasPermissionAsync(UserId, UserPermission.EditUsers)).Data;
+
+        if (!hasPermission)
+            return Result<None>.Error(ErrorCode.NotPermitted);
+
+        await refreshSessionService.DeleteUserSessionsAsync(requestModel.UserId);
+        await userService.DeleteUserAsync(requestModel.UserId);
 
         return Result<None>.Success();
     }
