@@ -85,5 +85,27 @@ public class UserController(IUserService userService, IRefreshSessionService ref
             User = presentationResult.Data
         });
     }
-    
+
+    [Authorize]
+    [HttpGet("full/{userId:guid}")]
+    public async Task<Result<GetUserFullDataResponseModel>> GetUserFullData(Guid userId)
+    {
+        var isSelfGet = UserId.Equals(userId);
+
+        // if not self-update - check user editing permission
+        if (!isSelfGet)
+        {
+            var hasPermission = (await userService.UserHasPermissionAsync(UserId, UserPermission.GetUsersFullData))
+                .Data;
+            if (!hasPermission)
+                return Result<GetUserFullDataResponseModel>.Error(ErrorCode.NotPermitted);
+        }
+
+        var fullDataResult = await userService.GetUserFullDataAsync(userId);
+
+        return Result<GetUserFullDataResponseModel>.Success(new GetUserFullDataResponseModel
+        {
+            User = fullDataResult.Data
+        });
+    }
 }

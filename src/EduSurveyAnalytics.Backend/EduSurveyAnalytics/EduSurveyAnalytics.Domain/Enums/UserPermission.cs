@@ -14,5 +14,7 @@ public enum UserPermission
     // edit form's data (if user is not an owner)
     EditForms,
     // get responses from forms (if user is not an owner)
-    GetFormsResponses
+    GetFormsResponses,
+    // get user's full data
+    GetUsersFullData
 }

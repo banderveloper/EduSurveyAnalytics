@@ -70,4 +70,12 @@ public interface IUserService
     /// <param name="userId">User id to get</param>
     /// <returns>User's presentation data, or null if user not found</returns>
     Task<Result<UserPresentationDTO?>> GetUserPresentationAsync(Guid userId);
+
+    /// <summary>
+    /// Get user full data
+    /// </summary>
+    /// <param name="userId">User id to get</param>
+    /// <returns>User's full data, or null if user not found</returns>
+    Task<Result<UserFullDataDTO?>> GetUserFullDataAsync(Guid userId);
+    
 }

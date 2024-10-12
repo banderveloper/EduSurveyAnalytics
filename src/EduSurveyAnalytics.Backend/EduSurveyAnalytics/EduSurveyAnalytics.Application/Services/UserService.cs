@@ -147,4 +147,26 @@ public class UserService(
             LastName = user.LastName
         });
     }
+
+    public async Task<Result<UserFullDataDTO?>> GetUserFullDataAsync(Guid userId)
+    {
+        var user = await context.Users.FindAsync(userId);
+        
+        if (user is null)
+            return Result<UserFullDataDTO?>.Success(null);
+
+        return Result<UserFullDataDTO?>.Success(new UserFullDataDTO
+        {
+            UserId = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            MiddleName = user.MiddleName,
+            BirthDate = user.BirthDate,
+            Permissions = user.Permissions,
+            Post = user.Post,
+            AccessCode = user.AccessCode,
+            CreatedAt = user.CreatedAt,
+            UpdatedAt = user.UpdatedAt
+        });
+    }
 }
