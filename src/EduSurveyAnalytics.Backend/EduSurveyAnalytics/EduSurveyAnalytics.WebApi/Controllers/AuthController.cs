@@ -5,7 +5,6 @@ using EduSurveyAnalytics.WebApi.Models.Requests;
 using EduSurveyAnalytics.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace EduSurveyAnalytics.WebApi.Controllers;
 

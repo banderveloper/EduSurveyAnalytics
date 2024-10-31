@@ -2,12 +2,14 @@
 using EduSurveyAnalytics.Application.Interfaces;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EduSurveyAnalytics.Application.Services;
 
 public class FormService(IApplicationDbContext context, IDateTimeProvider dateTimeProvider) : IFormService
 {
-    public async Task<Result<None>> CreateForm(Guid ownerId, string title, IEnumerable<FormFieldCreationDataDTO> formFields)
+    public async Task<Result<None>> CreateForm(Guid ownerId, string title,
+        IEnumerable<FormFieldCreationDataDTO> formFields)
     {
         var newFormId = Guid.NewGuid();
         var newForm = new Form
@@ -30,5 +32,33 @@ public class FormService(IApplicationDbContext context, IDateTimeProvider dateTi
         await context.SaveChangesAsync();
 
         return Result<None>.Success();
+    }
+
+    public async Task<Result<FormPresentationDTO?>> GetFormPresentationById(Guid formId)
+    {
+        var formEntity = await context.Forms
+            .Include(f => f.FormFields)
+            .Include(f => f.Owner)
+            .FirstOrDefaultAsync(f => f.Id == formId);
+
+        if (formEntity is null)
+            return Result<FormPresentationDTO?>.Success(null);
+
+        var formPresentation = new FormPresentationDTO();
+
+        formPresentation.Id = formEntity.Id;
+        formPresentation.OwnerId = formEntity.OwnerId;
+        formPresentation.OwnerName = string.Concat(formEntity.Owner.LastName, " ", formEntity.Owner.FirstName, " ", formEntity.Owner.MiddleName ?? "");
+        formPresentation.OwnerPost = formEntity.Owner.Post;
+
+        formPresentation.Fields = formEntity.FormFields.Select(ff => new FormFieldPresentationDTO
+        {
+            Id = ff.Id,
+            Order = ff.Order,
+            Constraints = ff.Constraints,
+            Title = ff.Title
+        }).OrderBy(ff => ff.Order);
+
+        return Result<FormPresentationDTO?>.Success(formPresentation);
     }
 }

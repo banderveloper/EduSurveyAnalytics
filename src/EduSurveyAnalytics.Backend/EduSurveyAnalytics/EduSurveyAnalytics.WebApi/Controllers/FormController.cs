@@ -48,4 +48,19 @@ public class FormController(IUserService userService, IFormService formService) 
         var result = await formService.CreateForm(UserId, request.FormTitle, formFieldsDto);
         return result;
     }
+
+    /// <summary>
+    /// Get form presentation data by id
+    /// </summary>
+    /// <param name="formId">Form id</param>
+    /// <returns>Result with form presentation, or null</returns>
+    /// <response code="200">Success / not_permitted</response>
+    [ProducesResponseType(typeof(Result<FormPresentationDTO?>), StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    [HttpGet("get/{formId:guid}")]
+    public async Task<Result<FormPresentationDTO?>> GetForm(Guid formId)
+    {
+        var result = await formService.GetFormPresentationById(formId);
+        return result;
+    }
 }

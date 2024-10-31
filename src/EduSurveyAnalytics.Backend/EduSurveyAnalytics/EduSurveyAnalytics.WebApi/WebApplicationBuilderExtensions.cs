@@ -62,6 +62,7 @@ public static class WebApplicationBuilderExtensions
                 // ErrorCode enum int value to snake_case_string in response (ex: not 1, but username_already_exists)
                 options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<ErrorCode>());
                 options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<UserPermission>());
+                options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<FormFieldConstraint>());
             })
             .ConfigureApiBehaviorOptions(options =>
             {
