@@ -45,7 +45,7 @@ public class FormController(IUserService userService, IFormService formService) 
             Title = ff.Title
         });
 
-        var result = await formService.CreateForm(UserId, request.FormTitle, formFieldsDto);
+        var result = await formService.CreateFormAsync(UserId, request.FormTitle, formFieldsDto);
         return result;
     }
 
@@ -60,7 +60,7 @@ public class FormController(IUserService userService, IFormService formService) 
     [HttpGet("get/{formId:guid}")]
     public async Task<Result<FormPresentationDTO?>> GetForm(Guid formId)
     {
-        var result = await formService.GetFormPresentationById(formId);
+        var result = await formService.GetFormPresentationByIdAsync(formId);
         return result;
     }
 }

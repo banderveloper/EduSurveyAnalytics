@@ -8,7 +8,7 @@ namespace EduSurveyAnalytics.Application.Services;
 
 public class FormService(IApplicationDbContext context, IDateTimeProvider dateTimeProvider) : IFormService
 {
-    public async Task<Result<None>> CreateForm(Guid ownerId, string title,
+    public async Task<Result<None>> CreateFormAsync(Guid ownerId, string title,
         IEnumerable<FormFieldCreationDataDTO> formFields)
     {
         var newFormId = Guid.NewGuid();
@@ -34,7 +34,7 @@ public class FormService(IApplicationDbContext context, IDateTimeProvider dateTi
         return Result<None>.Success();
     }
 
-    public async Task<Result<FormPresentationDTO?>> GetFormPresentationById(Guid formId)
+    public async Task<Result<FormPresentationDTO?>> GetFormPresentationByIdAsync(Guid formId)
     {
         var formEntity = await context.Forms
             .Include(f => f.FormFields)
@@ -44,20 +44,20 @@ public class FormService(IApplicationDbContext context, IDateTimeProvider dateTi
         if (formEntity is null)
             return Result<FormPresentationDTO?>.Success(null);
 
-        var formPresentation = new FormPresentationDTO();
-
-        formPresentation.Id = formEntity.Id;
-        formPresentation.OwnerId = formEntity.OwnerId;
-        formPresentation.OwnerName = string.Concat(formEntity.Owner.LastName, " ", formEntity.Owner.FirstName, " ", formEntity.Owner.MiddleName ?? "");
-        formPresentation.OwnerPost = formEntity.Owner.Post;
-
-        formPresentation.Fields = formEntity.FormFields.Select(ff => new FormFieldPresentationDTO
+        var formPresentation = new FormPresentationDTO
         {
-            Id = ff.Id,
-            Order = ff.Order,
-            Constraints = ff.Constraints,
-            Title = ff.Title
-        }).OrderBy(ff => ff.Order);
+            Id = formEntity.Id,
+            OwnerId = formEntity.OwnerId,
+            OwnerName = string.Concat(formEntity.Owner.LastName, " ", formEntity.Owner.FirstName, " ", formEntity.Owner.MiddleName ?? ""),
+            OwnerPost = formEntity.Owner.Post,
+            Fields = formEntity.FormFields.Select(ff => new FormFieldPresentationDTO
+            {
+                Id = ff.Id,
+                Order = ff.Order,
+                Constraints = ff.Constraints,
+                Title = ff.Title
+            }).OrderBy(ff => ff.Order)
+        };
 
         return Result<FormPresentationDTO?>.Success(formPresentation);
     }

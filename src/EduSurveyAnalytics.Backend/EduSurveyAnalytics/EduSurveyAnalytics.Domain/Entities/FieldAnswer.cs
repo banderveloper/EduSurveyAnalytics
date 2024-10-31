@@ -11,9 +11,9 @@ public class FieldAnswer : BaseEntity
     public Guid AnswerId { get; set; }
 
     /// <summary>
-    /// Input text
+    /// Input value
     /// </summary>
-    public string? Value { get; set; }
+    public object? Value { get; set; }
 
     // EF
     [JsonIgnore] public FormField FormField { get; set; }

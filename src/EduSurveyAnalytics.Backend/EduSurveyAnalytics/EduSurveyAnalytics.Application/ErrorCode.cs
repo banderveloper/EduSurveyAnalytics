@@ -15,6 +15,8 @@ public enum ErrorCode
     AccessCodeAlreadyExists,
     UserNotFound,
     
+    FormNotFound,
+    
     InvalidAccessToken,
     InvalidRefreshToken,
     InvalidFingerprint,

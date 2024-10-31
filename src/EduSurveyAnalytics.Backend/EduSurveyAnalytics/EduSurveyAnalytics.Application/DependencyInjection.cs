@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRefreshSessionService, RefreshSessionService>();
         services.AddScoped<IFormService, FormService>();
+        services.AddScoped<IAnswerService, AnswerService>();
         
         // Inject providers
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
