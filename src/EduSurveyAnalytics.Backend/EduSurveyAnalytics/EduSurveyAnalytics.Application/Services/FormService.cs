@@ -48,7 +48,7 @@ public class FormService(IApplicationDbContext context, IDateTimeProvider dateTi
         {
             Id = formEntity.Id,
             OwnerId = formEntity.OwnerId,
-            OwnerName = string.Concat(formEntity.Owner.LastName, " ", formEntity.Owner.FirstName, " ", formEntity.Owner.MiddleName ?? ""),
+            OwnerName = string.Join(" ", formEntity.Owner.LastName, formEntity.Owner.FirstName, formEntity.Owner.MiddleName),
             OwnerPost = formEntity.Owner.Post,
             Fields = formEntity.FormFields.Select(ff => new FormFieldPresentationDTO
             {
@@ -61,4 +61,6 @@ public class FormService(IApplicationDbContext context, IDateTimeProvider dateTi
 
         return Result<FormPresentationDTO?>.Success(formPresentation);
     }
+
+    
 }

@@ -38,4 +38,11 @@ public class AnswerController(IAnswerService answerService) : BaseController
 
         return result;
     }
+
+    [HttpGet("get/{formId:guid}")]
+    public async Task<Result<FormAnswersPresentationDTO?>> GetFormAnswers(Guid formId)
+    {
+        var result = await answerService.GetFormAnswers(formId);
+        return result;
+    }
 }

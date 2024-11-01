@@ -9,6 +9,8 @@ public class Answer : BaseEntity
 {
     public Guid UserId { get; set; }
     public Guid FormId { get; set; }
+    
+    public DateTimeOffset CreatedAt { get; set; }
 
     // EF
 
