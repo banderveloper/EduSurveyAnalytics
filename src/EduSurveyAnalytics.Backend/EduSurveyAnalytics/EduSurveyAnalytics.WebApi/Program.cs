@@ -11,6 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 {
     /////////// injecting configuration-independent services
     
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll", builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
+    
     builder.AddLogger();
     
     // inject custom configuration classes from file DependencyInjection.cs
@@ -42,6 +52,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    app.UseCors("AllowAll");
+    
     app.UseAuthentication();
     app.UseAuthorization();
     
