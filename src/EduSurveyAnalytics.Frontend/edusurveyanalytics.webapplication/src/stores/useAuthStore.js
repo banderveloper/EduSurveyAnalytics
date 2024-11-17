@@ -54,6 +54,12 @@ const useAuthStore = create((set) => ({
 
         set({errorCode: responseData.errorCode});
         set({isLoading: false});
+    },
+
+    clear: () => {
+        set({accessToken: true})
+        set({roles: []})
+        removeAccessToken();
     }
 }));
 

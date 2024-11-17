@@ -7,12 +7,6 @@ export default function App() {
     const authStore = useAuthStore();
     const userStore = useUsersStore();
 
-    console.log('Presentation: ')
-    console.log(userStore.currentUserPresentation);
-
-    console.log('Full: ')
-    console.log(userStore.currentUserFullData);
-
     return (
         <div>
             <h1>{authStore.isLoading ? 'LOADING' : "HELLO WORLD"}</h1>
