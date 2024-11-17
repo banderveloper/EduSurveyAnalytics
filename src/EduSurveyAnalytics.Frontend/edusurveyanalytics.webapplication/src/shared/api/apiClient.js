@@ -28,9 +28,15 @@ apiClient.interceptors.response.use(
         console.log('===== INTERCEPTOR RESPONSE ERROR =====');
         if (error.response?.status === 401) {
             console.log('UNAUTHORIZED');
-            const newToken = await refreshAccessToken();
-            localStorage.setItem('accessToken', newToken);
-            error.config.headers.Authorization = `Bearer ${newToken}`;
+            const refreshResponse = await refreshAccessToken();
+
+            if(!refreshResponse.succeed) {
+                // send to auth page
+                return Promise.reject(error);
+            }
+
+            localStorage.setItem('accessToken', refreshResponse.data.accessToken);
+            error.config.headers.Authorization = `Bearer ${refreshResponse.data.accessToken}`;
             return apiClient.request(error.config);
         }
         return Promise.reject(error);

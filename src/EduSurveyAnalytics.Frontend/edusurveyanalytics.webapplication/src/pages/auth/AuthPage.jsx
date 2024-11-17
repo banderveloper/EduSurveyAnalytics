@@ -1,6 +1,7 @@
 ﻿import {useState} from "react";
 import {useSignIn} from "../../features/auth/hooks/useSignIn.js";
 import {useSignOut} from "../../features/auth/hooks/useSignOut.js";
+import {getUserPresentation} from "../../features/users/api/usersApi.js";
 
 const AuthPage = () => {
 
@@ -18,6 +19,13 @@ const AuthPage = () => {
     const signOut = async(e) => {
         e.preventDefault();
         await signOutMutation.mutateAsync();
+    }
+
+    const createUser = async(e) => {
+        e.preventDefault();
+
+        let a = await getUserPresentation({userId: '93b1cda6-61d4-4791-ad8f-c2f11f5d1d49'})
+        console.log(a.data);
     }
 
     return (
@@ -39,6 +47,7 @@ const AuthPage = () => {
                 Sign In
             </button>
             <button onClick={signOut}>Sign out</button>
+            <button onClick={createUser}>Get user</button>
         </form>
     );
 };
