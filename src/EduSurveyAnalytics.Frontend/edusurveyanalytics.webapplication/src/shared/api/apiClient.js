@@ -7,7 +7,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
 
-    console.log('REQUEST:');
+    console.log('===== INTERCEPTOR REQUEST =====');
     console.log(config.data);
 
     const token = localStorage.getItem('accessToken');
@@ -18,9 +18,16 @@ apiClient.interceptors.request.use((config) => {
 });
 
 apiClient.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        console.log('===== INTERCEPTOR RESPONSE SUCCEED =====');
+        console.log(response.data);
+
+        return response;
+    },
     async (error) => {
+        console.log('===== INTERCEPTOR RESPONSE ERROR =====');
         if (error.response?.status === 401) {
+            console.log('UNAUTHORIZED');
             const newToken = await refreshAccessToken();
             localStorage.setItem('accessToken', newToken);
             error.config.headers.Authorization = `Bearer ${newToken}`;

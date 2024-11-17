@@ -13,10 +13,11 @@ public class CookieProvider(
         response.Cookies.Append(cookieConfiguration.FingerprintCookieName, fingerprint,
             new CookieOptions
             {
-                Secure = true,
-                HttpOnly = true,
-                SameSite = SameSiteMode.Lax,
-                Expires = new DateTimeOffset(DateTime.UtcNow.AddMinutes(refreshSessionConfiguration.ExpirationMinutes))
+                Secure = cookieConfiguration.IsSecure,
+                HttpOnly = cookieConfiguration.HttpOnly,
+                SameSite = cookieConfiguration.IsSameSiteLax ? SameSiteMode.Lax : SameSiteMode.None,
+                // temporary until frontend cookie accepting fix
+                MaxAge = TimeSpan.MaxValue
             });
     }
 
@@ -25,10 +26,11 @@ public class CookieProvider(
         response.Cookies.Append(cookieConfiguration.RefreshTokenCookieName, refreshToken,
             new CookieOptions
             {
-                Secure = true,
-                HttpOnly = true,
-                SameSite = SameSiteMode.Lax,
-                Expires = new DateTimeOffset(DateTime.UtcNow.AddMinutes(refreshSessionConfiguration.ExpirationMinutes))
+                Secure = cookieConfiguration.IsSecure,
+                HttpOnly = cookieConfiguration.HttpOnly,
+                SameSite = cookieConfiguration.IsSameSiteLax ? SameSiteMode.Lax : SameSiteMode.None,
+                // temporary until frontend cookie accepting fix
+                MaxAge = TimeSpan.MaxValue
             });
     }
 

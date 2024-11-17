@@ -13,11 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
     
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy("AllowAll", builder =>
+        options.AddPolicy("AllowAll", policy =>
         {
-            builder.AllowAnyOrigin()
+            policy.WithOrigins("*", "null", "http://localhost:5174")
                 .AllowAnyMethod()
-                .AllowAnyHeader();
+                .AllowAnyHeader()
+                .AllowCredentials();
         });
     });
     
