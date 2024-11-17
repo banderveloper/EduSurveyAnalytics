@@ -4,7 +4,9 @@ import {ENDPOINTS} from "../shared/endpoints.js";
 import {removeAccessToken, saveAccessToken} from "../shared/localStorage.js";
 
 const useAuthStore = create((set) => ({
+
     accessToken: null,  // Store access token
+    errorCode: null,
     isAuthenticated: () => (state) => state.accessToken !== null,
     isLoading: false,
     roles: [],          // Store roles array
@@ -13,40 +15,44 @@ const useAuthStore = create((set) => ({
 
         set({isLoading: true});
 
-        const response = await apiClient.post(ENDPOINTS.AUTH.SIGN_IN, { accessCode, password, fingerprint });
+        const response = await apiClient.post(ENDPOINTS.AUTH.SIGN_IN, {accessCode, password, fingerprint});
         const responseData = response.data;
 
-        if(responseData.succeed){
+        if (responseData.succeed) {
             saveAccessToken(responseData.data.accessToken);
             set({accessToken: response.data.data.accessToken});
         }
 
+        set({errorCode: responseData.errorCode});
         set({isLoading: false});
     },
 
-    refresh: async() => {
+    refresh: async () => {
         set({isLoading: true});
 
         const response = await apiClient.post(ENDPOINTS.AUTH.REFRESH);
         const responseData = response.data;
 
-        if(responseData.succeed){
+        if (responseData.succeed) {
             saveAccessToken(responseData.data.accessToken);
             set({accessToken: response.data.data.accessToken});
         }
 
+        set({errorCode: responseData.errorCode});
         set({isLoading: false});
     },
 
-    signOut: async() => {
+    signOut: async () => {
 
         set({isLoading: true});
 
-        await apiClient.post(ENDPOINTS.AUTH.SIGN_OUT);
+        const response = await apiClient.post(ENDPOINTS.AUTH.SIGN_OUT);
+        const responseData = response.data;
 
         set({accessToken: null});
         removeAccessToken();
 
+        set({errorCode: responseData.errorCode});
         set({isLoading: false});
     }
 }));
