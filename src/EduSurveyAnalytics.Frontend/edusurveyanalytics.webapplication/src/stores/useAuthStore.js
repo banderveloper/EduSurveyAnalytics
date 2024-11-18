@@ -57,7 +57,7 @@ const useAuthStore = create((set) => ({
     },
 
     clear: () => {
-        set({accessToken: true})
+        set({accessToken: null})
         set({roles: []})
         removeAccessToken();
     }

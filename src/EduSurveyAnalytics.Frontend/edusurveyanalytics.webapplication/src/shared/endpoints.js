@@ -13,5 +13,9 @@ export const ENDPOINTS = {
         DELETE: `${API_URL}/user/delete`,
         GET_USER_PRESENTATION: `${API_URL}/user/presentation/`,
         GET_USER_FULL_DATA: `${API_URL}/user/full/`,
+    },
+    ANSWERS: {
+        CREATE: `${API_URL}/answer/create`,
+        GET_ANSWERS: `${API_URL}/answer/get/`,
     }
 };
