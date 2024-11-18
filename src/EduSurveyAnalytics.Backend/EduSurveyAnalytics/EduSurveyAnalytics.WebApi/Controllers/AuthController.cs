@@ -215,4 +215,6 @@ public class AuthController(
         await refreshSessionService.DeleteSessionAsync(UserId, request.Fingerprint);
         return Result<None>.Success();
     }
+    
+    
 }

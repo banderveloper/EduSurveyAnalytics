@@ -70,7 +70,7 @@ const useUsersStore = create((set) => ({
         const response = await apiClient.get(ENDPOINTS.USER.GET_USER_PRESENTATION + userId);
         const responseData = response.data;
 
-        set({currentUserPresentation: responseData.data});
+        set({currentUserPresentation: responseData.data.user});
         set({errorCode: responseData.errorCode});
         set({isLoading: false});
     },
@@ -81,7 +81,7 @@ const useUsersStore = create((set) => ({
         const response = await apiClient.get(ENDPOINTS.USER.GET_USER_FULL_DATA + userId);
         const responseData = response.data;
 
-        set({currentUserFullData: responseData.data});
+        set({currentUserFullData: responseData.data.user});
         set({errorCode: responseData.errorCode});
         set({isLoading: false});
     }

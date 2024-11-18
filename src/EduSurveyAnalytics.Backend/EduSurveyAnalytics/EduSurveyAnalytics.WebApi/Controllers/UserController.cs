@@ -130,7 +130,7 @@ public class UserController(IUserService userService, IRefreshSessionService ref
     /// <response code="200">Success</response>
     [AllowAnonymous]
     [HttpGet("presentation/{userId:guid}")]
-    [ProducesResponseType(typeof(Result<None>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<GetUserPresentationResponseModel>), StatusCodes.Status200OK)]
     public async Task<Result<GetUserPresentationResponseModel>> GetUserPresentation(Guid userId)
     {
         var presentationResult = await userService.GetUserPresentationAsync(userId);
@@ -150,7 +150,7 @@ public class UserController(IUserService userService, IRefreshSessionService ref
     /// <response code="401">Unauthorized</response>
     [Authorize]
     [HttpGet("full/{userId:guid}")]
-    [ProducesResponseType(typeof(Result<None>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<GetUserFullDataResponseModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<None>), StatusCodes.Status401Unauthorized)]
     public async Task<Result<GetUserFullDataResponseModel>> GetUserFullData(Guid userId)
     {
