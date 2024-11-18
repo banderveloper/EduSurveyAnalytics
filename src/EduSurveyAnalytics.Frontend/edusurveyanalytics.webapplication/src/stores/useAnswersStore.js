@@ -1,4 +1,4 @@
-﻿import {create} from "zustand/index.js";
+﻿import {create} from "zustand";
 import apiClient from "../shared/axios.js";
 import {ENDPOINTS} from "../shared/endpoints.js";
 

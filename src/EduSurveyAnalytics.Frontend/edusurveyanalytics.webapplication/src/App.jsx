@@ -1,11 +1,18 @@
 import './App.css'
 import useAuthStore from "./stores/useAuthStore.js";
 import useUsersStore from "./stores/useUsersStore.js";
+import useFormsStore from "./stores/useFormsStore.js";
+import useAnswersStore from "./stores/useAnswersStore.js";
 
 export default function App() {
 
     const authStore = useAuthStore();
     const userStore = useUsersStore();
+    const formsStore = useFormsStore();
+    const answersStore = useAnswersStore();
+
+    console.log('Form data:')
+    console.log(formsStore.currentForm);
 
     return (
         <div>
@@ -44,6 +51,11 @@ export default function App() {
             <button onClick={() => {
                 userStore.getUserFullData('4fa68881-51f5-4bb0-88f5-071c236788e1');
             }}>Get full
+            </button>
+
+            <button onClick={() => {
+                answersStore.getFormAnswers('ce856fec-3386-494e-a835-0fad2a44d6d3')
+            }}>Get answers
             </button>
 
         </div>

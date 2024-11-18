@@ -24,12 +24,10 @@ public class FormController(IUserService userService, IFormService formService) 
     /// <response code="401">Unauthorized</response>
     /// <response code="422">Request is not valid</response>
     [Authorize]
-    [HttpPost("delete")]
+    [HttpPost("create")]
     [ProducesResponseType(typeof(Result<None>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<None>), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(Result<Dictionary<string, string[]>>), StatusCodes.Status422UnprocessableEntity)]
-    [Authorize]
-    [HttpPost("create")]
     public async Task<Result<None>> CreateForm([FromBody] CreateFormRequestModel request)
     {
         // Check for permission for creating forms

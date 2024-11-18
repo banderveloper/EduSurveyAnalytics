@@ -17,5 +17,9 @@ export const ENDPOINTS = {
     ANSWERS: {
         CREATE: `${API_URL}/answer/create`,
         GET_ANSWERS: `${API_URL}/answer/get/`,
+    },
+    FORMS: {
+        GET: `${API_URL}/form/get/`,
+        CREATE: `${API_URL}/form/create`,
     }
 };
