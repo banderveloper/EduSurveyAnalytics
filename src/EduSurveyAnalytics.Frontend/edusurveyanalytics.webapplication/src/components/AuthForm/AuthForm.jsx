@@ -37,7 +37,7 @@ const AuthForm = () => {
                 </Form.Text>
             }
 
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" disabled={authStore.isLoading}>
                 Submit
             </Button>
         </Form>
