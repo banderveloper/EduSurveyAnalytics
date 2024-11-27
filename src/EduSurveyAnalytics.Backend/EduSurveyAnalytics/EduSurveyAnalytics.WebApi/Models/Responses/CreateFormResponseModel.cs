@@ -2,5 +2,5 @@
 
 public class CreateFormResponseModel
 {
-    
+    public Guid FormId { get; set; }
 }

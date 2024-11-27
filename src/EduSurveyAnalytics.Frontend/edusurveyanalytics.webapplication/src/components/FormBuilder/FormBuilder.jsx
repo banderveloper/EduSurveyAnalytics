@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import { useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import useFormsStore from "../../stores/useFormsStore.js";
 import {useNavigate} from "react-router-dom";
@@ -45,8 +45,7 @@ const FormBuilder = () => {
         formsStore.createForm(formTitle, formFields);
     };
 
-    const handleVisitForm = (e) => {
-
+    const handleVisitForm = () => {
         navigate('/form?id=' + formsStore.createdFormId)
     }
 

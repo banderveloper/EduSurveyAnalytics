@@ -8,6 +8,7 @@ import AuthPage from "./pages/AuthPage/AuthPage.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import SignOutPage from "./pages/SignOutPage/SignOutPage.jsx";
 import FormBuilderPage from "./pages/FormBuilderPage/FormBuilderPage.jsx";
+import FormAnswersPage from "./pages/FormAnswersPage/FormAnswersPage.jsx";
 
 export default function App() {
 
@@ -22,6 +23,7 @@ export default function App() {
                     <Route path="/form" element={<FormPickerPage/>} />
                     <Route path="/sign-out" element={<SignOutPage/>} />
                     <Route path="/form/create" element={<FormBuilderPage/>} />
+                    <Route path="/form/answers" element={<FormAnswersPage/>} />
                 </Routes>
             </Container>
         </>

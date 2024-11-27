@@ -8,7 +8,7 @@ namespace EduSurveyAnalytics.Application.Services;
 
 public class FormService(IApplicationDbContext context, IDateTimeProvider dateTimeProvider) : IFormService
 {
-    public async Task<Result<None>> CreateFormAsync(Guid ownerId, string title,
+    public async Task<Result<Guid>> CreateFormAsync(Guid ownerId, string title,
         IEnumerable<FormFieldCreationDataDTO> formFields)
     {
         var newFormId = Guid.NewGuid();
@@ -31,7 +31,7 @@ public class FormService(IApplicationDbContext context, IDateTimeProvider dateTi
         context.Forms.Add(newForm);
         await context.SaveChangesAsync();
 
-        return Result<None>.Success();
+        return Result<Guid>.Success(newForm.Id);
     }
 
     public async Task<Result<FormPresentationDTO?>> GetFormPresentationByIdAsync(Guid formId)

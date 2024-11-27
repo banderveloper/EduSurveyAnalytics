@@ -4,6 +4,7 @@ public class FormAnswersPresentationDTO
 {
     public string FormTitle { get; set; }
     public IEnumerable<FormFieldAnswersPresentationDTO> FormFields { get; set; }
+    public int AnswersCount { get; set; }
 }
 
 public class FormFieldAnswersPresentationDTO

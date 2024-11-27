@@ -3,6 +3,7 @@ using EduSurveyAnalytics.Application.DTO;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Enums;
 using EduSurveyAnalytics.WebApi.Models.Requests;
+using EduSurveyAnalytics.WebApi.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,16 +26,16 @@ public class FormController(IUserService userService, IFormService formService) 
     /// <response code="422">Request is not valid</response>
     [Authorize]
     [HttpPost("create")]
-    [ProducesResponseType(typeof(Result<None>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<CreateFormResponseModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<None>), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(Result<Dictionary<string, string[]>>), StatusCodes.Status422UnprocessableEntity)]
-    public async Task<Result<None>> CreateForm([FromBody] CreateFormRequestModel request)
+    public async Task<Result<CreateFormResponseModel>> CreateForm([FromBody] CreateFormRequestModel request)
     {
         // Check for permission for creating forms
         var hasPermission = (await userService.UserHasPermissionAsync(UserId, UserPermission.EditForms)).Data;
 
         if (!hasPermission)
-            return Result<None>.Error(ErrorCode.NotPermitted);
+            return Result<CreateFormResponseModel>.Error(ErrorCode.NotPermitted);
 
         var formFieldsDto = request.FormFields.Select(ff => new FormFieldCreationDataDTO
         {
@@ -44,7 +45,10 @@ public class FormController(IUserService userService, IFormService formService) 
         });
 
         var result = await formService.CreateFormAsync(UserId, request.FormTitle, formFieldsDto);
-        return result;
+
+        return result.Succeed 
+            ? Result<CreateFormResponseModel>.Success(new CreateFormResponseModel { FormId = result.Data }) 
+            : Result<CreateFormResponseModel>.Error(result.ErrorCode);
     }
 
     /// <summary>

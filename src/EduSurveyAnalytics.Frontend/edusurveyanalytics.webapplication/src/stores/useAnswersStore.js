@@ -8,6 +8,7 @@ const useAnswersStore = create((set) => ({
     isLoading: false,
     currentFormAnswers: [],
     currentFormTitle: null,
+    currentFormAnswersCount: 0,
 
     createForm: async (formId, fieldAnswers) => {
 
@@ -29,7 +30,8 @@ const useAnswersStore = create((set) => ({
 
         if(responseData.succeed) {
             set({currentFormTitle: responseData.data.formTitle});
-            set({currentFormAnswers: responseData.data.answers});
+            set({currentFormAnswers: responseData.data.formFields});
+            set({currentFormAnswersCount: responseData.data.answersCount});
         }
 
         set({errorCode: responseData.errorCode});

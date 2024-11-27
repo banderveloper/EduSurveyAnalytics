@@ -39,6 +39,7 @@ public class AnswerService(IApplicationDbContext context, IDateTimeProvider date
     public async Task<Result<FormAnswersPresentationDTO?>> GetFormAnswers(Guid formId)
     {
         var form = await context.Forms
+            .Include(form => form.Answers)
             .Include(form => form.FormFields)
             .ThenInclude(formField => formField.FieldAnswers)
             .ThenInclude(fieldAnswer => fieldAnswer.Answer)
@@ -46,7 +47,7 @@ public class AnswerService(IApplicationDbContext context, IDateTimeProvider date
             .FirstOrDefaultAsync(form => form.Id == formId);
 
         if (form is null)
-            return Result<FormAnswersPresentationDTO?>.Success(null);
+            return Result<FormAnswersPresentationDTO?>.Error(ErrorCode.FormNotFound);
 
         var formAnswersPresentationDto = new FormAnswersPresentationDTO
         {
@@ -61,7 +62,8 @@ public class AnswerService(IApplicationDbContext context, IDateTimeProvider date
                     UserName = string.Join(" ", fieldAnswer.Answer.User.LastName, fieldAnswer.Answer.User.FirstName,
                         fieldAnswer.Answer.User.MiddleName)
                 })
-            })
+            }),
+            AnswersCount = form.Answers.Count
         };
 
         return Result<FormAnswersPresentationDTO?>.Success(formAnswersPresentationDto);

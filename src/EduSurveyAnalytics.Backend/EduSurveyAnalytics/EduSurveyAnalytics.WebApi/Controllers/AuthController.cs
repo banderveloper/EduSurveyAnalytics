@@ -64,7 +64,8 @@ public class AuthController(
         return Result<SignInResponseModel>.Success(new SignInResponseModel
         {
             AccessToken = accessToken,
-            PasswordChangeRequired = user.PasswordHash is null
+            PasswordChangeRequired = user.PasswordHash is null,
+            Permissions = user.Permissions
         });
     }
 

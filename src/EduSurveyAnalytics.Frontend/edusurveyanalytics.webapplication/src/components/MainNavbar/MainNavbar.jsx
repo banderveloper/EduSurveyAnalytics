@@ -11,23 +11,26 @@ const MainNavbar = () => {
         <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
             <Container>
                 <Link className='navbar-brand' to='/'>EduSurveyAnalytics</Link>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                         {
-                            authStore.isAuthenticated()
-                                ? <Link className='nav-link navbar-nav' to='/sign-out'>Sign out</Link>
-                                : <Link className='nav-link navbar-nav' to='/auth'>Sign in</Link>
+                            !authStore.isAuthenticated()
+                                ? <Link className='nav-link navbar-nav' to='/auth'>Sign in</Link>
+                                :
+                                <>
+                                    <Link className='nav-link navbar-nav' to='/sign-out'>Sign out</Link>
+                                    <Link className='nav-link navbar-nav' to='/form'>Forms</Link>
+                                </>
                         }
-
-                        <Link className='nav-link navbar-nav' to='/form'>Forms</Link>
-
                         {
                             authStore.hasPermission(PERMISSION.EDIT_FORMS)
-                                && <Link className='nav-link navbar-nav' to='/form/create'>Create form</Link>
+                            && <Link className='nav-link navbar-nav' to='/form/create'>Create form</Link>
                         }
-
-
+                        {
+                            authStore.hasPermission(PERMISSION.GET_FORMS_RESPONSES)
+                            && <Link className='nav-link navbar-nav' to='/form/answers'>Answers</Link>
+                        }
                     </Nav>
                 </Navbar.Collapse>
             </Container>
