@@ -1,13 +1,12 @@
 ﻿import {create} from 'zustand';
 import apiClient from "../shared/axios.js";
 import {ENDPOINTS} from "../shared/endpoints.js";
-import {removeAccessToken, saveAccessToken} from "../shared/localStorage.js";
+import {getAccessToken, removeAccessToken, saveAccessToken} from "../shared/localStorage.js";
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set,get) => ({
 
     accessToken: null,  // Store access token
     errorCode: null,
-    isAuthenticated: () => (state) => state.accessToken !== null,
     isLoading: false,
     roles: [],          // Store roles array
 
@@ -60,6 +59,10 @@ const useAuthStore = create((set) => ({
         set({accessToken: null})
         set({roles: []})
         removeAccessToken();
+    },
+
+    isAuthenticated: () => {
+        return get().accessToken || getAccessToken();
     }
 }));
 

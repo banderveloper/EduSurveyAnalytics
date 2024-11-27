@@ -1,26 +1,26 @@
-﻿import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
+﻿import {Container, Nav, Navbar} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import useAuthStore from "../../stores/useAuthStore.js";
 
 const MainNavbar = () => {
+
+    const authStore = useAuthStore();
+
     return (
         <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
             <Container>
-                <Navbar.Brand href="#home">EduSurveyAnalytics</Navbar.Brand>
+                <Link className='navbar-brand' to='/'>EduSurveyAnalytics</Link>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#features">Features</Nav.Link>
-                        <Nav.Link href="#pricing">Pricing</Nav.Link>
-                        <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">
-                                Another action
-                            </NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">
-                                Separated link
-                            </NavDropdown.Item>
-                        </NavDropdown>
+                        {
+                            authStore.isAuthenticated()
+                                ? <Link className='nav-link navbar-nav' to='/sign-out'>Sign out</Link>
+                                : <Link className='nav-link navbar-nav' to='/auth'>Sign in</Link>
+                        }
+
+
+                        <Link className='nav-link navbar-nav' to='/form'>Forms</Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

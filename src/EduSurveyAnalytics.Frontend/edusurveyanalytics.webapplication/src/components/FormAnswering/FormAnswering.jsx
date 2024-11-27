@@ -1,5 +1,5 @@
 ﻿import {useEffect, useState} from 'react';
-import {Button, Container, Form} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import useAnswersStore from "../../stores/useAnswersStore.js";
 import useAuthStore from "../../stores/useAuthStore.js";
 import {FORM_FIELD_CONSTRAINTS} from "../../shared/enums/formFieldConstraints.js";
@@ -54,7 +54,6 @@ const FormAnswering = (data) => {
     };
 
     return (
-        <Container className="mt-4">
             <Form onSubmit={handleSubmit}>
                 {/* Display labels for ownerName, ownerPost, createdAt, and updatedAt */}
                 <Form.Group className="mb-3">
@@ -89,7 +88,7 @@ const FormAnswering = (data) => {
                     Submit
                 </Button>
             </Form>
-        </Container>
+
     );
 };
 
