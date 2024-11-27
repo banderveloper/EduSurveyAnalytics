@@ -9,6 +9,15 @@ const useUsersStore = create((set) => ({
     isLoading: false,
     currentUserPresentation: null,
     currentUserFullData: null,
+    createdUserId: null,
+
+    updateCurrentUserFullData: (updatedData) =>
+        set((state) => ({
+            currentUserFullData: {
+                ...state.currentUserFullData,
+                ...updatedData,
+            },
+        })),
 
     createUser: async (accessCode, lastName, firstName, middleName, birthDate, post) => {
 
@@ -26,10 +35,13 @@ const useUsersStore = create((set) => ({
 
         if (responseData.succeed) {
             set({currentUserPresentation: responseData.data});
+            set({createdUserId: responseData.data.userId});
         }
 
         set({errorCode: responseData.errorCode});
         set({isLoading: false});
+
+        return responseData.data.userId;
     },
 
     setPassword: async (password) => {

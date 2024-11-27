@@ -31,6 +31,10 @@ const MainNavbar = () => {
                             authStore.hasPermission(PERMISSION.GET_FORMS_RESPONSES)
                             && <Link className='nav-link navbar-nav' to='/form/answers'>Answers</Link>
                         }
+                        {
+                            authStore.hasPermission(PERMISSION.EDIT_USERS)
+                            && <Link className='nav-link navbar-nav' to='/user/create'>Create user</Link>
+                        }
                     </Nav>
                 </Navbar.Collapse>
             </Container>

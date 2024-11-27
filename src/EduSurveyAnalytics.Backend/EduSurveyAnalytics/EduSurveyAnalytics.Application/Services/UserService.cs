@@ -1,4 +1,5 @@
-﻿using EduSurveyAnalytics.Application.DTO;
+﻿using System.Text.Json;
+using EduSurveyAnalytics.Application.DTO;
 using EduSurveyAnalytics.Application.Interfaces;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Entities;
@@ -57,15 +58,15 @@ public class UserService(
         string? middleName, DateOnly? birthDate, string? post, IEnumerable<UserPermission> permissions)
     {
         // If user with given access code already exists - error
-        if (await context.Users.AnyAsync(u => u.AccessCode.Equals(accessCode)))
-            return Result<None>.Error(ErrorCode.AccessCodeAlreadyExists);
-
+        // if (await context.Users.AnyAsync(u => u.AccessCode.Equals(accessCode)))
+        //     return Result<None>.Error(ErrorCode.AccessCodeAlreadyExists);
+        
         // find user by userId with tracking for updating
         var user = await context.Users.AsTracking().FirstOrDefaultAsync(u => u.Id.Equals(userId));
-
+        
         if (user is null)
             return Result<None>.Error(ErrorCode.UserNotFound);
-
+        
         // update user's data
         user.AccessCode = accessCode;
         user.LastName = lastName;

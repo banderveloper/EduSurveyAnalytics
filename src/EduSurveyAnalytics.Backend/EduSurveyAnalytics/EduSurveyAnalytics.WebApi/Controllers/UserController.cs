@@ -25,23 +25,26 @@ public class UserController(IUserService userService, IRefreshSessionService ref
     /// <response code="422">Request is not valid</response>
     [Authorize]
     [HttpPost("create")]
-    [ProducesResponseType(typeof(Result<None>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<CreateUserResponseModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<None>), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(Result<Dictionary<string, string[]>>), StatusCodes.Status422UnprocessableEntity)]
-    public async Task<Result<None>> CreateUser([FromBody] CreateUserRequestModel request)
+    public async Task<Result<CreateUserResponseModel>> CreateUser([FromBody] CreateUserRequestModel request)
     {
         // Check for permission for creating users
         var hasPermission = (await userService.UserHasPermissionAsync(UserId, UserPermission.EditUsers)).Data;
 
         if (!hasPermission)
-            return Result<None>.Error(ErrorCode.NotPermitted);
+            return Result<CreateUserResponseModel>.Error(ErrorCode.NotPermitted);
 
         var createUserResult = await userService.CreateUserAsync(request.AccessCode, request.LastName,
             request.FirstName, request.MiddleName, request.BirthDate, request.Post);
 
-        return createUserResult.Succeed 
-            ? Result<None>.Success() 
-            : Result<None>.Error(createUserResult.ErrorCode);
+        return createUserResult.Succeed
+            ? Result<CreateUserResponseModel>.Success(new CreateUserResponseModel
+            {
+                UserId = createUserResult.Data.Id
+            })
+            : Result<CreateUserResponseModel>.Error(createUserResult.ErrorCode);
     }
 
     /// <summary>
@@ -89,10 +92,13 @@ public class UserController(IUserService userService, IRefreshSessionService ref
                 return Result<None>.Error(ErrorCode.NotPermitted);
         }
 
-        await userService.UpdateUserAsync(request.UserId, request.AccessCode, request.LastName, request.FirstName,
+        Console.WriteLine("Invoking update user from controller");
+
+        var result = await userService.UpdateUserAsync(request.UserId, request.AccessCode, request.LastName,
+            request.FirstName,
             request.MiddleName, request.BirthDate, request.Post, request.Permissions);
 
-        return Result<None>.Success();
+        return result;
     }
 
     /// <summary>

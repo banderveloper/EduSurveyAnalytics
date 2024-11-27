@@ -9,6 +9,8 @@ import HomePage from "./pages/HomePage/HomePage.jsx";
 import SignOutPage from "./pages/SignOutPage/SignOutPage.jsx";
 import FormBuilderPage from "./pages/FormBuilderPage/FormBuilderPage.jsx";
 import FormAnswersPage from "./pages/FormAnswersPage/FormAnswersPage.jsx";
+import CreateUserPage from "./pages/CreateUserPage/CreateUserPage.jsx";
+import GetUserPage from "./pages/GetUserPage/GetUserPage.jsx";
 
 export default function App() {
 
@@ -24,6 +26,8 @@ export default function App() {
                     <Route path="/sign-out" element={<SignOutPage/>} />
                     <Route path="/form/create" element={<FormBuilderPage/>} />
                     <Route path="/form/answers" element={<FormAnswersPage/>} />
+                    <Route path="/user/create" element={<CreateUserPage/>} />
+                    <Route path="/user" element={<GetUserPage/>}/>
                 </Routes>
             </Container>
         </>
