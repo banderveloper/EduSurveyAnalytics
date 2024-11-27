@@ -1,6 +1,7 @@
 ﻿import {Container, Nav, Navbar} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore.js";
+import {PERMISSION} from "../../shared/enums/permissions.js";
 
 const MainNavbar = () => {
 
@@ -19,8 +20,14 @@ const MainNavbar = () => {
                                 : <Link className='nav-link navbar-nav' to='/auth'>Sign in</Link>
                         }
 
-
                         <Link className='nav-link navbar-nav' to='/form'>Forms</Link>
+
+                        {
+                            authStore.hasPermission(PERMISSION.EDIT_FORMS)
+                                && <Link className='nav-link navbar-nav' to='/form/create'>Create form</Link>
+                        }
+
+
                     </Nav>
                 </Navbar.Collapse>
             </Container>

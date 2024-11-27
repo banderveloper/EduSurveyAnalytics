@@ -8,6 +8,7 @@ const useFormsStore = create((set) => ({
     errorCode: null,
     isLoading: false,
     currentForm: null,
+    createdFormId: null,
 
     getForm: async(formId) => {
 
@@ -21,15 +22,22 @@ const useFormsStore = create((set) => ({
         set({isLoading: false});
     },
 
-    createForm: async(form) => {
+    createForm: async(formTitle, formFields) => {
 
         set({isLoading: true});
 
-        const response = await apiClient.post(ENDPOINTS.FORMS.CREATE, {form});
+        const response = await apiClient.post(ENDPOINTS.FORMS.CREATE, {formFields, formTitle});
         const responseData = response.data;
 
         set({errorCode: responseData.errorCode});
         set({isLoading: false});
+
+        if(responseData.succeed){
+            set({createdFormId: responseData.data.formId});
+        }
+        else{
+            set({createdFormId: null})
+        }
     }
 }));
 

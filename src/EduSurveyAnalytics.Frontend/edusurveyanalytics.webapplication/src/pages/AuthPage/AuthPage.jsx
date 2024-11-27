@@ -1,14 +1,19 @@
 ﻿import AuthForm from "../../components/AuthForm/AuthForm.jsx";
 import useAuthStore from "../../stores/useAuthStore.js";
-import HomePage from "../HomePage/HomePage.jsx";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 const AuthPage = () => {
 
     const authStore = useAuthStore();
+    const navigate = useNavigate();
 
-    if(authStore.isAuthenticated()) {
-        return <HomePage/>
-    }
+    useEffect(() => {
+        if(authStore.isAuthenticated()) {
+            navigate("/");
+        }
+    }, [authStore]);
+
 
     return (
         <>

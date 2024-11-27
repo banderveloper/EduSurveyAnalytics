@@ -1,14 +1,21 @@
 ﻿import {create} from 'zustand';
 import apiClient from "../shared/axios.js";
 import {ENDPOINTS} from "../shared/endpoints.js";
-import {getAccessToken, removeAccessToken, saveAccessToken} from "../shared/localStorage.js";
+import {
+    getAccessToken, getPermissions,
+    removeAccessToken,
+    removePermissions,
+    saveAccessToken,
+    savePermissions
+} from "../shared/localStorage.js";
+import {PERMISSION} from "../shared/enums/permissions.js";
 
 const useAuthStore = create((set,get) => ({
 
     accessToken: null,  // Store access token
     errorCode: null,
     isLoading: false,
-    roles: [],          // Store roles array
+    permissions: [],          // Store roles array
 
     signIn: async (accessCode, password, fingerprint) => {
 
@@ -19,7 +26,10 @@ const useAuthStore = create((set,get) => ({
 
         if (responseData.succeed) {
             saveAccessToken(responseData.data.accessToken);
+            savePermissions(response.data.data.permissions);
+
             set({accessToken: response.data.data.accessToken});
+            set({permissions: response.data.data.permissions});
         }
 
         set({errorCode: responseData.errorCode});
@@ -57,12 +67,28 @@ const useAuthStore = create((set,get) => ({
 
     clear: () => {
         set({accessToken: null})
-        set({roles: []})
+        set({permissions: []})
         removeAccessToken();
+        removePermissions();
     },
 
     isAuthenticated: () => {
         return get().accessToken || getAccessToken();
+    },
+
+    getPermissions: () => {
+        const inMemoryPermissions = get().permissions;
+
+        if(inMemoryPermissions > 0) {
+            return inMemoryPermissions;
+        }
+
+        return getPermissions();
+    },
+
+    hasPermission: (permission) => {
+        const userPermissions = get().getPermissions();
+        return userPermissions.includes(permission) || userPermissions.includes(PERMISSION.ALL);
     }
 }));
 

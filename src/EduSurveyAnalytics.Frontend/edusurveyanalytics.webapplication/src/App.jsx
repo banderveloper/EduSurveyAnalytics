@@ -7,6 +7,7 @@ import {Route, Routes} from "react-router-dom";
 import AuthPage from "./pages/AuthPage/AuthPage.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import SignOutPage from "./pages/SignOutPage/SignOutPage.jsx";
+import FormBuilderPage from "./pages/FormBuilderPage/FormBuilderPage.jsx";
 
 export default function App() {
 
@@ -20,6 +21,7 @@ export default function App() {
                     <Route path="/auth" element={<AuthPage/>} />
                     <Route path="/form" element={<FormPickerPage/>} />
                     <Route path="/sign-out" element={<SignOutPage/>} />
+                    <Route path="/form/create" element={<FormBuilderPage/>} />
                 </Routes>
             </Container>
         </>
