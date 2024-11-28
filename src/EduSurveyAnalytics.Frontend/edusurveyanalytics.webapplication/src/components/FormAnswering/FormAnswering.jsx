@@ -3,18 +3,13 @@ import {Button, Form} from "react-bootstrap";
 import useAnswersStore from "../../stores/useAnswersStore.js";
 import useAuthStore from "../../stores/useAuthStore.js";
 import {FORM_FIELD_CONSTRAINTS} from "../../shared/enums/formFieldConstraints.js";
+import {Link} from "react-router-dom";
 
 const FormAnswering = (data) => {
 
     data = data.data;
 
-    const authStore = useAuthStore();
     const answersStore = useAnswersStore();
-
-    // todo remove
-    useEffect(() => {
-        authStore.signIn('admin',  'admin', 'web')
-    }, []);
 
     const [answers, setAnswers] = useState(
         data.fields.map((field) => ({
@@ -54,40 +49,42 @@ const FormAnswering = (data) => {
     };
 
     return (
-            <Form onSubmit={handleSubmit}>
-                {/* Display labels for ownerName, ownerPost, createdAt, and updatedAt */}
-                <Form.Group className="mb-3">
-                    <Form.Label><strong>Owner Name:</strong> {data.ownerName}</Form.Label>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label><strong>Owner Post:</strong> {data.ownerPost}</Form.Label>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label><strong>Created At:</strong> {data.createdAt}</Form.Label>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label><strong>Updated At:</strong> {data.updatedAt}</Form.Label>
-                </Form.Group>
+        <Form onSubmit={handleSubmit}>
+            {/* Display labels for ownerName, ownerPost, createdAt, and updatedAt */}
+            <Form.Group className="mb-3">
+                <Form.Label><strong>Owner Name: </strong>
+                    <Link to={'/user?id='+data.ownerId}>{data.ownerName}</Link>
+                </Form.Label>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label><strong>Owner Post:</strong> {data.ownerPost}</Form.Label>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label><strong>Created At:</strong> {data.createdAt}</Form.Label>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label><strong>Updated At:</strong> {data.updatedAt}</Form.Label>
+            </Form.Group>
 
-                {/* Render fields with title as label and input for user answer */}
-                <h5>Fields</h5>
-                {data.fields.map((field, index) => (
-                    <Form.Group className="mb-3" key={field.id}>
-                        <Form.Label>{field.title}</Form.Label>
-                        <Form.Control
-                            type={getInputType(field.constraints)} // Determine input type based on constraints
-                            placeholder={`Enter your answer for "${field.title}"`}
-                            value={answers[index].value}
-                            onChange={(e) => handleFieldChange(index, e.target.value)}
-                            required={isRequired(field.constraints)} // Apply required constraint
-                        />
-                    </Form.Group>
-                ))}
+            {/* Render fields with title as label and input for user answer */}
+            <h5>Fields</h5>
+            {data.fields.map((field, index) => (
+                <Form.Group className="mb-3" key={field.id}>
+                    <Form.Label>{field.title}</Form.Label>
+                    <Form.Control
+                        type={getInputType(field.constraints)} // Determine input type based on constraints
+                        placeholder={`Enter your answer for "${field.title}"`}
+                        value={answers[index].value}
+                        onChange={(e) => handleFieldChange(index, e.target.value)}
+                        required={isRequired(field.constraints)} // Apply required constraint
+                    />
+                </Form.Group>
+            ))}
 
-                <Button variant="primary" type="submit" disabled={answersStore.isLoading}>
-                    Submit
-                </Button>
-            </Form>
+            <Button variant="primary" type="submit" disabled={answersStore.isLoading}>
+                Submit
+            </Button>
+        </Form>
 
     );
 };
