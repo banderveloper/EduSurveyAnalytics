@@ -3,6 +3,7 @@ using EduSurveyAnalytics.Application.Interfaces;
 using EduSurveyAnalytics.Application.Interfaces.Services;
 using EduSurveyAnalytics.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace EduSurveyAnalytics.Application.Services;
 
@@ -48,7 +49,8 @@ public class FormService(IApplicationDbContext context, IDateTimeProvider dateTi
         {
             Id = formEntity.Id,
             OwnerId = formEntity.OwnerId,
-            OwnerName = string.Join(" ", formEntity.Owner.LastName, formEntity.Owner.FirstName, formEntity.Owner.MiddleName),
+            OwnerName = string.Join(" ", formEntity.Owner.LastName, formEntity.Owner.FirstName,
+                formEntity.Owner.MiddleName),
             OwnerPost = formEntity.Owner.Post,
             Fields = formEntity.FormFields.Select(ff => new FormFieldPresentationDTO
             {
@@ -62,5 +64,21 @@ public class FormService(IApplicationDbContext context, IDateTimeProvider dateTi
         return Result<FormPresentationDTO?>.Success(formPresentation);
     }
 
-    
+    public async Task<Result<IEnumerable<FormShortInfoDTO>>> GetAllFormsShortInfo()
+    {
+        var forms = await context.Forms
+            .Include(form => form.Owner)
+            .ToListAsync();
+
+        var dtos = forms.Select(form => new FormShortInfoDTO
+        {
+            Id = form.Id,
+            OwnerName = string.Join(" ", form.Owner.LastName, form.Owner.FirstName,
+                form.Owner.MiddleName),
+            Title = form.Title,
+            UpdatedAt = form.UpdatedAt
+        });
+        
+        return Result<IEnumerable<FormShortInfoDTO>>.Success(dtos);
+    }
 }

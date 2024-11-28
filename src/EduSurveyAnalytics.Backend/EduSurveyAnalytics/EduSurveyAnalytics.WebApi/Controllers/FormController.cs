@@ -65,4 +65,21 @@ public class FormController(IUserService userService, IFormService formService) 
         var result = await formService.GetFormPresentationByIdAsync(formId);
         return result;
     }
+
+    /// <summary>
+    /// Get all forms shorts
+    /// </summary>
+    /// <returns>Result with forms shorts, or null</returns>
+    /// <response code="200">Success</response>
+    [ProducesResponseType(typeof(Result<GetFormsShortsResponseModel>), StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    [HttpGet("get/shorts")]
+    public async Task<Result<GetFormsShortsResponseModel>> GetFormsShorts()
+    {
+        var getResult = await formService.GetAllFormsShortInfo();
+        return Result<GetFormsShortsResponseModel>.Success(new GetFormsShortsResponseModel
+        {
+            Forms = getResult.Data
+        });
+    }
 }

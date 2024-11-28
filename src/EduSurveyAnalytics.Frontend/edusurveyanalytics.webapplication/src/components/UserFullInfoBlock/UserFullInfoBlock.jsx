@@ -71,9 +71,8 @@ const UserFullInfoBlock = ({ userId }) => {
             .replace(/_/g, " ")
             .replace(/\b\w/g, (char) => char.toUpperCase());
 
-    const { currentUserFullData } = usersStore;
 
-    if (!currentUserFullData) {
+    if (!usersStore.currentUserFullData) {
         return <h2 className="text-danger">User not found</h2>;
     }
 
@@ -86,7 +85,7 @@ const UserFullInfoBlock = ({ userId }) => {
                         <strong>User ID:</strong>
                     </Col>
                     <Col>
-                        <span>{currentUserFullData.userId}</span>
+                        <span>{usersStore.currentUserFullData.userId}</span>
                     </Col>
                 </Row>
 
@@ -100,7 +99,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <Form.Control
                                     type="text"
                                     name="accessCode"
-                                    value={currentUserFullData.accessCode || ""}
+                                    value={usersStore.currentUserFullData.accessCode || ""}
                                     onChange={handleChange}
                                 />
                             </Col>
@@ -113,7 +112,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <Form.Control
                                     type="text"
                                     name="lastName"
-                                    value={currentUserFullData.lastName || ""}
+                                    value={usersStore.currentUserFullData.lastName || ""}
                                     onChange={handleChange}
                                 />
                             </Col>
@@ -126,7 +125,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <Form.Control
                                     type="text"
                                     name="firstName"
-                                    value={currentUserFullData.firstName || ""}
+                                    value={usersStore.currentUserFullData.firstName || ""}
                                     onChange={handleChange}
                                 />
                             </Col>
@@ -139,7 +138,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <Form.Control
                                     type="text"
                                     name="middleName"
-                                    value={currentUserFullData.middleName || ""}
+                                    value={usersStore.currentUserFullData.middleName || ""}
                                     onChange={handleChange}
                                 />
                             </Col>
@@ -152,7 +151,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <Form.Control
                                     type="date"
                                     name="birthDate"
-                                    value={currentUserFullData.birthDate || ""}
+                                    value={usersStore.currentUserFullData.birthDate || ""}
                                     onChange={handleChange}
                                 />
                             </Col>
@@ -165,7 +164,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <Form.Control
                                     type="text"
                                     name="post"
-                                    value={currentUserFullData.post || ""}
+                                    value={usersStore.currentUserFullData.post || ""}
                                     onChange={handleChange}
                                 />
                             </Col>
@@ -182,7 +181,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                             type="checkbox"
                                             label={permissionDisplay(permission)}
                                             value={permission}
-                                            checked={currentUserFullData.permissions.includes(permission)}
+                                            checked={usersStore.currentUserFullData.permissions.includes(permission)}
                                             onChange={handlePermissionChange}
                                         />
                                     )
@@ -197,7 +196,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <strong>Access Code:</strong>
                             </Col>
                             <Col>
-                                <span>{currentUserFullData.accessCode}</span>
+                                <span>{usersStore.currentUserFullData.accessCode}</span>
                             </Col>
                         </Row>
                         <Row className="mb-3">
@@ -205,7 +204,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <strong>Last Name:</strong>
                             </Col>
                             <Col>
-                                <span>{currentUserFullData.lastName}</span>
+                                <span>{usersStore.currentUserFullData.lastName}</span>
                             </Col>
                         </Row>
                         <Row className="mb-3">
@@ -213,7 +212,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <strong>First Name:</strong>
                             </Col>
                             <Col>
-                                <span>{currentUserFullData.firstName}</span>
+                                <span>{usersStore.currentUserFullData.firstName}</span>
                             </Col>
                         </Row>
                         <Row className="mb-3">
@@ -221,7 +220,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <strong>Middle Name:</strong>
                             </Col>
                             <Col>
-                                <span>{currentUserFullData.middleName}</span>
+                                <span>{usersStore.currentUserFullData.middleName}</span>
                             </Col>
                         </Row>
                         <Row className="mb-3">
@@ -229,7 +228,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <strong>Birth Date:</strong>
                             </Col>
                             <Col>
-                                <span>{currentUserFullData.birthDate}</span>
+                                <span>{usersStore.currentUserFullData.birthDate}</span>
                             </Col>
                         </Row>
                         <Row className="mb-3">
@@ -237,7 +236,7 @@ const UserFullInfoBlock = ({ userId }) => {
                                 <strong>Post:</strong>
                             </Col>
                             <Col>
-                                <span>{currentUserFullData.post}</span>
+                                <span>{usersStore.currentUserFullData.post}</span>
                             </Col>
                         </Row>
                         <Row className="mb-3">
@@ -246,7 +245,7 @@ const UserFullInfoBlock = ({ userId }) => {
                             </Col>
                             <Col>
                 <span>
-                  {currentUserFullData.permissions
+                  {usersStore.currentUserFullData.permissions
                       .map((permission) => permissionDisplay(permission))
                       .join(", ")}
                 </span>

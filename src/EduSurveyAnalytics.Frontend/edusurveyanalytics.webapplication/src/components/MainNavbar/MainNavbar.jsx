@@ -20,7 +20,7 @@ const MainNavbar = () => {
                                 :
                                 <>
                                     <Link className='nav-link navbar-nav' to='/sign-out'>Sign out</Link>
-                                    <Link className='nav-link navbar-nav' to='/form'>Forms</Link>
+                                    <Link className='nav-link navbar-nav' to='/forms'>All forms</Link>
                                 </>
                         }
                         {

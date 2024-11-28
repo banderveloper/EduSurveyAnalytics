@@ -21,5 +21,6 @@ export const ENDPOINTS = {
     FORMS: {
         GET: `${API_URL}/form/get/`,
         CREATE: `${API_URL}/form/create`,
+        GET_SHORTS: `${API_URL}/form/get/shorts`,
     }
 };

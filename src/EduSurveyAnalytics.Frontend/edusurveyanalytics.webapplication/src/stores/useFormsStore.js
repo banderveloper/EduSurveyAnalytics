@@ -3,7 +3,7 @@ import apiClient from "../shared/axios.js";
 import {ENDPOINTS} from "../shared/endpoints.js";
 
 
-const useFormsStore = create((set) => ({
+const useFormsStore = create((set,get) => ({
 
     errorCode: null,
     isLoading: false,
@@ -38,6 +38,17 @@ const useFormsStore = create((set) => ({
         else{
             set({createdFormId: null})
         }
+    },
+
+    getShorts: async() => {
+        set({isLoading: true});
+
+        const response = await apiClient.get(ENDPOINTS.FORMS.GET_SHORTS);
+        const responseData = response.data;
+
+        set({isLoading: false});
+
+        return responseData.data.forms;
     }
 }));
 
