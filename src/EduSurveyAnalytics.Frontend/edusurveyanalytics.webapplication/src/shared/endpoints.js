@@ -1,4 +1,4 @@
-﻿export const API_URL = 'http://localhost:5035';
+﻿export const API_URL = 'http://195.234.5.107';
 
 export const ENDPOINTS = {
     AUTH: {
